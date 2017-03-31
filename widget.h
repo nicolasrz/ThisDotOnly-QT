@@ -7,6 +7,7 @@
 #include <QVBoxLayout>
 #include <QPushButton>
 #include "buttoncolor.h"
+#include <QLabel>
 class Widget : public QWidget
 {
     Q_OBJECT
@@ -17,18 +18,22 @@ public:
 
     QPointer<QVBoxLayout> vLayout;
     QPointer<QHBoxLayout> hLayout;
+    QPointer<QHBoxLayout> hInfoGame;
     QVector<ButtonColor*> vButtonColor;
     QString colorToKill;
     QStringList listColor;
     QStringList listColorShowed;
+    QPointer<QLabel> labelColorToKill;
+    QPointer<QLabel> labelTurn;
     int turn;
-
+    int colorToKillSize;
 
 
     QString changeColorButtonTo(QString color);
     QString getRandomColorFrom(QStringList list);
     int getRandomNumber();
     QString getRandomColorShowed();
+    int getColorToKillSize();
 
 
 
@@ -36,6 +41,10 @@ public:
     void initQss();
     void initColorList();
     void newTurn();
+    void reset();
+    void completeListColorShowed(QString colorRandom);
+    void lose();
+
 public slots:
     void killThisDot();
 

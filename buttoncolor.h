@@ -17,7 +17,7 @@ public:
     void setColor(QString color);
 
     int getPosition();
-    void setPOsition(int pos);
+    void setPosition(int pos);
 
 private:
     QPointer<QPushButton> button;

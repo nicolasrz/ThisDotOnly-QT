@@ -19,7 +19,6 @@ ButtonColor::~ButtonColor()
 
 QPointer<QPushButton> ButtonColor::getButton()
 {
-    qDebug() << "test";
     return this->button;
 }
 void ButtonColor::setButton(QPointer<QPushButton> button)
@@ -42,7 +41,7 @@ int ButtonColor::getPosition()
     return this->position;
 }
 
-void ButtonColor::setPOsition(int pos)
+void ButtonColor::setPosition(int pos)
 {
     this->position = pos;
 }

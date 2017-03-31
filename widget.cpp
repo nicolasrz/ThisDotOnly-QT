@@ -5,13 +5,13 @@
 #include <QDateTime>
 #include "time.h"
 #include <QFile>
-
+#include <QMessageBox>
 Widget::Widget(QWidget *parent)
     : QWidget(parent)
 {
     this->init();
     this->initQss();
-    this->newTurn();
+
 }
 
 Widget::~Widget()
@@ -25,7 +25,44 @@ void Widget::init()
     // That is needed only once on application startup
     QTime time = QTime::currentTime();
     qsrand((uint)time.msec());
-    //qsrand(QTime(0,0,0).secsTo(QTime::currentTime()));
+    this->initColorList();
+    this->turn = 0;
+
+
+    vLayout = new QVBoxLayout(this);
+    hInfoGame = new QHBoxLayout();
+    labelColorToKill = new QLabel();
+    labelTurn = new QLabel("Turn : " + QString::number(this->turn));
+
+
+    hInfoGame->addWidget(labelColorToKill);
+    hInfoGame->addWidget(labelTurn);
+    vLayout->addLayout(hInfoGame);
+
+    for(int i =0; i < 25 ; ++i){
+        if(i%5 == 0){
+            hLayout = new QHBoxLayout();
+        }
+
+        QPointer<QPushButton> button = new QPushButton();
+        QString colorRandom = this->getRandomColorFrom(this->listColor);
+
+        button->setObjectName(QString::number(i));
+        button->setStyleSheet(this->changeColorButtonTo(colorRandom));
+
+        this->completeListColorShowed(colorRandom);
+
+        ButtonColor *buttonColor = new ButtonColor(button, colorRandom, i);
+        vButtonColor.append(buttonColor);
+        connect(button, &QPushButton::clicked, this, &Widget::killThisDot) ;
+        hLayout->addWidget(button);
+        vLayout->addLayout(hLayout);
+    }
+    this->colorToKill = this->getRandomColorShowed();
+    this->colorToKillSize = this->getColorToKillSize();
+    labelColorToKill->setText("Kill this dot only ! -> " + this->colorToKill);
+    qDebug() << this->colorToKill;
+    qDebug() << this->colorToKillSize;
 
 
 }
@@ -61,19 +98,23 @@ QString Widget::changeColorButtonTo(QString color)
 }
 
 void Widget::killThisDot(){
-    qDebug() << "clicked";
     QTextStream out(stdout);
     QObject *senderObj = sender(); // This will give Sender object
-    QString senderObjName = senderObj->objectName();
+    int position = senderObj->objectName().toInt();
 
-//    if(colorButton == this->colorToKill)
-//    {
-//        ->setStyleSheet(this->changeColorButtonTo("white"));
-//    }else{
-//        QMessageBox msgBox;
-//        msgBox.setText("Lose !");
-//        msgBox.exec();
-//    }
+    if(vButtonColor[position]->getColor() == this->colorToKill)
+    {
+        vButtonColor[position]->getButton()->setStyleSheet(this->changeColorButtonTo("white"));
+        --this->colorToKillSize;
+
+        if(this->colorToKillSize == 0){
+            qDebug() << "next" ;
+            this->newTurn();
+        }
+    }else
+    {
+        this->lose();
+    }
 }
 
 
@@ -86,38 +127,54 @@ QString Widget::getRandomColorShowed()
     return this->getRandomColorFrom(this->listColorShowed);
 }
 
+int Widget::getColorToKillSize()
+{
+    int count = 0;
+    for(int i = 0; i< vButtonColor.size(); ++i){
+        if(vButtonColor[i]->getColor() == this->colorToKill){
+            ++count;
+        }
+    }
+    return count;
+}
+
 
 void Widget::newTurn(){
-    this->initColorList();
-
-    for(int i=0; i < vButtonColor.size(); ++i){
-        connect(vButtonColor[i]->getButton(), &QPushButton::clicked, this, &Widget::killThisDot) ;
-    }
-    this->turn = 0;
-    vLayout = new QVBoxLayout(this);
-
-    for(int i =0; i < 25 ; ++i){
-        if(i%5 == 0){
-            hLayout = new QHBoxLayout();
-        }
-
-        QPointer<QPushButton> button = new QPushButton();
+    //this->listColorShowed.clear();
+    this->turn++;
+    labelTurn->setText("Turn : " + QString::number(this->turn));
+    QString colorRandom = this->getRandomColorFrom(this->listColor);
+    for(int i =0; i< vButtonColor.size(); ++i){
         QString colorRandom = this->getRandomColorFrom(this->listColor);
-
-        button->setObjectName(QString::number(i));
-        button->setStyleSheet(this->changeColorButtonTo(colorRandom));
-
-        if(!this->listColorShowed.contains(colorRandom)){
-            this->listColorShowed.append(colorRandom);
-        }
-
-        ButtonColor *buttonColor = new ButtonColor(button, colorRandom, i);
-        vButtonColor.append(buttonColor);
-
-        hLayout->addWidget(button);
-        vLayout->addLayout(hLayout);
+        vButtonColor[i]->setColor(colorRandom);
+        vButtonColor[i]->getButton()->setStyleSheet(this->changeColorButtonTo(colorRandom));
     }
-
     this->colorToKill = this->getRandomColorShowed();
+    this->colorToKillSize = this->getColorToKillSize();
+    labelColorToKill->setText("Kill this dot only ! -> " + this->colorToKill);
+    qDebug() << this->colorToKill;
+    qDebug() << this->colorToKillSize;
     qDebug() << "Kill the dot with the color :" + this->colorToKill;
+}
+
+void Widget::reset()
+{
+    for(int i = 0; i< vButtonColor.size(); ++i){
+        delete vButtonColor[i];
+    }
+    delete vLayout;
+}
+
+void Widget::completeListColorShowed(QString colorRandom)
+{
+    if(!this->listColorShowed.contains(colorRandom)){
+        this->listColorShowed.append(colorRandom);
+    }
+}
+
+void Widget::lose()
+{
+    QMessageBox msgBox;
+    msgBox.setText("You loose ! You success to the turn " + QString::number(this->turn));
+    msgBox.exec();
 }

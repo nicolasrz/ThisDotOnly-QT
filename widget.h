@@ -3,7 +3,9 @@
 
 #include <QWidget>
 #include <QPointer>
-#include <QGridLayout>
+#include <QHBoxLayout>
+#include <QVBoxLayout>
+#include <QPushButton>
 class Widget : public QWidget
 {
     Q_OBJECT
@@ -11,7 +13,29 @@ class Widget : public QWidget
 public:
     Widget(QWidget *parent = 0);
     ~Widget();
-    QPointer<QGridLayout> gridLayout;
+
+    QPointer<QVBoxLayout> vLayout;
+    QPointer<QHBoxLayout> hLayout;
+    QMap<int, QMap<QPointer<QPushButton>, QString>> *map;
+    QString colorToKill;
+    QStringList listColor;
+    QStringList listColorShowed;
+    int turn;
+
+
+    QString changeColorButton(QString color);
+    QString getRandomColor(QStringList list);
+    int getRandomNumber();
+    QString getRandomColorShowed();
+
+
+
+    void init();
+    void initQss();
+    void initColorList();
+    void newTurn();
+public slots:
+    void killThisDot();
 
 };
 

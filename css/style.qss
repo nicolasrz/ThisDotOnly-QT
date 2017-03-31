@@ -13,3 +13,9 @@ QPushButton
     min-height:100px;
 }
 
+QLabel
+{
+background-color:white;
+max-height : 20 px;
+}
+

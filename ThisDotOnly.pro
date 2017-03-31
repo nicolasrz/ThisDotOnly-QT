@@ -24,9 +24,11 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 
 SOURCES += main.cpp\
-        widget.cpp
+        widget.cpp \
+    buttoncolor.cpp
 
-HEADERS  += widget.h
+HEADERS  += widget.h \
+    buttoncolor.h
 
 RESOURCES += \
     resources.qrc

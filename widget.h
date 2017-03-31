@@ -6,6 +6,7 @@
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QPushButton>
+#include "buttoncolor.h"
 class Widget : public QWidget
 {
     Q_OBJECT
@@ -16,15 +17,16 @@ public:
 
     QPointer<QVBoxLayout> vLayout;
     QPointer<QHBoxLayout> hLayout;
-    QMap<int, QMap<QPointer<QPushButton>, QString>> *map;
+    QVector<ButtonColor*> vButtonColor;
     QString colorToKill;
     QStringList listColor;
     QStringList listColorShowed;
     int turn;
 
 
-    QString changeColorButton(QString color);
-    QString getRandomColor(QStringList list);
+
+    QString changeColorButtonTo(QString color);
+    QString getRandomColorFrom(QStringList list);
     int getRandomNumber();
     QString getRandomColorShowed();
 

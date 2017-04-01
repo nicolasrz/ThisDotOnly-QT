@@ -18,6 +18,7 @@ StartScreen::StartScreen(QWidget *parent)
     vStartLayout->addWidget(buttonQuitGame);
 
 
+
     connect(buttonStartGame, &QPushButton::clicked, this, &StartScreen::startGame) ;
     connect(buttonShowScore, &QPushButton::clicked, this, &StartScreen::showScore) ;
     connect(buttonQuitGame, &QPushButton::clicked, this, &StartScreen::quitGame) ;

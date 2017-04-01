@@ -5,7 +5,7 @@
 #include "startscreen.h"
 #include "game.h"
 #include <QStackedLayout>
-#include <QVBoxLayout>
+#include <QHBoxLayout>
 class Widget : public QWidget
 {
     Q_OBJECT
@@ -17,11 +17,9 @@ public:
     int widthScreen;
 
     QPointer<QStackedLayout> stackedLayout;
-    QPointer<QVBoxLayout> mainLayout ;
+    QPointer<QHBoxLayout> mainLayout ;
     QPointer<StartScreen> startScreen;
     QPointer<Game> game;
-
-    static Widget viewToShow;
 
     void initQss();
 

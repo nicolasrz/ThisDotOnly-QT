@@ -15,7 +15,7 @@ Widget::Widget(QWidget *parent)
 //    this->setMinimumHeight(this->heightScreen);
 //    this->setMinimumWidth(this->widthScreen);
 
-
+    mainLayout = new QHBoxLayout(this);
 
     startScreen = new StartScreen();
     game = new Game();
@@ -24,11 +24,10 @@ Widget::Widget(QWidget *parent)
     stackedLayout->addWidget(startScreen);
     stackedLayout->addWidget(game);
 
-    mainLayout = new QVBoxLayout(this);
+
     mainLayout->addLayout(stackedLayout);
 
     stackedLayout->setCurrentIndex(0);
-    qDebug() << "widget";
     this->initQss();
 
 

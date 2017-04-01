@@ -1,11 +1,6 @@
-Widget{
-    background-color : white;
-}
-StartScreen{
-    background-color : white;
-}
-Game{
-    background-color : white;
+StartScreen
+{
+    background-color:red;
 }
 QPushButton
 {

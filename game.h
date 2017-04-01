@@ -41,6 +41,8 @@ public:
     void reset();
     void completeListColorShowed(QString colorRandom);
     void lose();
+    void doSpecialTurn();
+    void easyTurn();
 public slots:
     void killThisDot();
 };

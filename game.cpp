@@ -138,15 +138,7 @@ void Game::newTurn(){
     //this->listColorShowed.clear();
     this->turn++;
     labelTurn->setText("Turn : " + QString::number(this->turn));
-    QString colorRandom = this->getRandomColorFrom(this->listColor);
-    for(int i =0; i< vButtonColor.size(); ++i){
-        QString colorRandom = this->getRandomColorFrom(this->listColor);
-        vButtonColor[i]->setColor(colorRandom);
-        vButtonColor[i]->getButton()->setStyleSheet(this->changeColorButtonTo(colorRandom));
-    }
-    this->colorToKill = this->getRandomColorShowed();
-    this->colorToKillSize = this->getColorToKillSize();
-    labelColorToKill->setText("Kill this dot only ! -> " + this->colorToKill);
+    this->doSpecialTurn();
     qDebug() << this->colorToKill;
     qDebug() << this->colorToKillSize;
     qDebug() << "Kill the dot with the color :" + this->colorToKill;
@@ -176,4 +168,30 @@ void Game::lose()
     msgBox.exec();
     this->turn = 0 ;
     this->newTurn();
+}
+
+void Game::doSpecialTurn(){
+    if(this->turn < 2){
+        this->easyTurn();
+    }
+    else if(this->turn > 2){
+        this->easyTurn();
+    }else{
+        this->easyTurn();
+    }
+    labelColorToKill->setText("Kill this dot only ! -> " + this->colorToKill);
+}
+
+void Game::easyTurn()
+{
+
+    QString colorRandom = this->getRandomColorFrom(this->listColor);
+    for(int i =0; i< vButtonColor.size(); ++i){
+        QString colorRandom = this->getRandomColorFrom(this->listColor);
+        vButtonColor[i]->setColor(colorRandom);
+        vButtonColor[i]->getButton()->setStyleSheet(this->changeColorButtonTo(colorRandom));
+    }
+    this->colorToKill = this->getRandomColorShowed();
+    this->colorToKillSize = this->getColorToKillSize();
+
 }

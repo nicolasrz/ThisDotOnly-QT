@@ -1,11 +1,12 @@
 #include "widget.h"
 #include <QApplication>
 
+Widget * widget;
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    Widget w;
-    w.show();
+    widget = new Widget();
+    widget->show();
 
     return a.exec();
 }

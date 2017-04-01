@@ -1,21 +1,26 @@
 Widget{
     background-color : white;
 }
-
+StartScreen{
+    background-color : white;
+}
+Game{
+    background-color : white;
+}
 QPushButton
 {
     border-style: solid;
     border-width:1px;
-    border-radius:50px;
-    max-width:100px;
-    max-height:100px;
-    min-width:100px;
-    min-height:100px;
+    border-radius:25px;
+    max-width:50px;
+    max-height:50px;
+    min-width:50px;
+    min-height:50px;
 }
 
 QLabel
 {
-background-color:white;
-max-height : 20 px;
+    background-color:white;
+    max-height : 20 px;
 }
 

@@ -2,12 +2,10 @@
 #define WIDGET_H
 
 #include <QWidget>
-#include <QPointer>
-#include <QHBoxLayout>
+#include "startscreen.h"
+#include "game.h"
+#include <QStackedLayout>
 #include <QVBoxLayout>
-#include <QPushButton>
-#include "buttoncolor.h"
-#include <QLabel>
 class Widget : public QWidget
 {
     Q_OBJECT
@@ -15,38 +13,19 @@ class Widget : public QWidget
 public:
     Widget(QWidget *parent = 0);
     ~Widget();
+    int heightScreen;
+    int widthScreen;
 
-    QPointer<QVBoxLayout> vLayout;
-    QPointer<QHBoxLayout> hLayout;
-    QPointer<QHBoxLayout> hInfoGame;
-    QVector<ButtonColor*> vButtonColor;
-    QString colorToKill;
-    QStringList listColor;
-    QStringList listColorShowed;
-    QPointer<QLabel> labelColorToKill;
-    QPointer<QLabel> labelTurn;
-    int turn;
-    int colorToKillSize;
+    QPointer<QStackedLayout> stackedLayout;
+    QPointer<QVBoxLayout> mainLayout ;
+    QPointer<StartScreen> startScreen;
+    QPointer<Game> game;
 
+    static Widget viewToShow;
 
-    QString changeColorButtonTo(QString color);
-    QString getRandomColorFrom(QStringList list);
-    int getRandomNumber();
-    QString getRandomColorShowed();
-    int getColorToKillSize();
-
-
-
-    void init();
     void initQss();
-    void initColorList();
-    void newTurn();
-    void reset();
-    void completeListColorShowed(QString colorRandom);
-    void lose();
 
-public slots:
-    void killThisDot();
+
 
 };
 

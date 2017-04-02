@@ -29,7 +29,7 @@ void Game::init()
     this->lost = false;
     timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this,&Game::timerUpdate);
-    q = QTime::fromString("00:00:00");
+    q = QTime::fromString("00:00:05");
     timer->start(1000);
     this->timerIsCounting = false;
 
@@ -38,12 +38,12 @@ void Game::init()
     hInfoGame = new QHBoxLayout();
     labelColorToKill = new QLabel();
     labelTurn = new QLabel("Turn : " + QString::number(this->turn));
-    timeLabel = new QLabel(q.toString("hh:mm:ss"));
+    timeLabel = new QLabel(q.toString("ss"));
 
 
     hInfoGame->addWidget(labelColorToKill);
     hInfoGame->addWidget(labelTurn);
-    hInfoGame->addWidget(timeLabel);
+
 
 
     vLayout->addLayout(hInfoGame);
@@ -71,6 +71,7 @@ void Game::init()
     this->colorToKill = this->getRandomColorShowed();
     this->colorToKillSize = this->getColorToKillSize();
     labelColorToKill->setText("Kill this dot only ! -> " + this->colorToKill);
+    labelColorToKill->setStyleSheet("QLabel{color : "+this->colorToKill+" }");
     qDebug() << this->colorToKill;
     qDebug() << this->colorToKillSize;
 
@@ -145,7 +146,10 @@ int Game::getColorToKillSize()
 void Game::newTurn(){
     //this->listColorShowed.clear();
     this->turn++;
+    this->timerIsCounting = false;
     labelTurn->setText("Turn : " + QString::number(this->turn));
+    q = QTime::fromString("00:00:05");
+    timeLabel->setText(q.toString("hh:mm:ss"));
     this->doSpecialTurn();
     qDebug() << this->colorToKill;
     qDebug() << this->colorToKillSize;
@@ -170,7 +174,7 @@ void Game::completeListColorShowed(QString colorRandom)
 void Game::lose()
 {
     this->lost = true;
-
+    this->timerIsCounting = false;
     QMessageBox msgBox;
     msgBox.setText("You loose at turn " + QString::number(this->turn));
     msgBox.exec();
@@ -183,11 +187,14 @@ void Game::doSpecialTurn(){
         this->easyTurn();
     }
     else if(this->turn > 2){
+        this->timerIsCounting = true;
+        hInfoGame->addWidget(timeLabel);
         this->easyTurn();
     }else{
         this->easyTurn();
     }
     labelColorToKill->setText("Kill this dot only ! -> " + this->colorToKill);
+    labelColorToKill->setStyleSheet("QLabel{color : "+this->colorToKill+" }");
 }
 
 void Game::easyTurn()
@@ -214,7 +221,13 @@ void Game::timeTurn(int secondes)
 
 void Game::timerUpdate()
 {
-    q = q.addSecs(1);
-    timeLabel->setText(q.toString("hh:mm:ss"));
-    qDebug() << q.toString("hh:mm:ss");
+    if(this->timerIsCounting){
+        q = q.addSecs(-1);
+        timeLabel->setText(q.toString("ss"));
+        if(q.toString("ss").toInt() == 0){
+            this->lose();
+        }
+        qDebug() << q.toString("ss");
+    }
+
 }

@@ -8,6 +8,8 @@
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QPointer>
+#include <QTimer>
+#include <QTime>
 class Game : public QWidget
 {
     Q_OBJECT
@@ -24,9 +26,13 @@ public:
     QStringList listColorShowed;
     QPointer<QLabel> labelColorToKill;
     QPointer<QLabel> labelTurn;
+    QPointer <QTimer> timer;
+    QTime q;
+    QPointer <QLabel> timeLabel;
     int turn;
     int colorToKillSize;
     bool lost;
+    bool timerIsCounting;
 
     QString changeColorButtonTo(QString color);
     QString getRandomColorFrom(QStringList list);
@@ -43,8 +49,10 @@ public:
     void lose();
     void doSpecialTurn();
     void easyTurn();
+    void timeTurn(int secondes);
 public slots:
     void killThisDot();
+    void timerUpdate();
 };
 
 #endif // GAME_H

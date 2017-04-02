@@ -5,6 +5,7 @@
 #include <QMessageBox>
 #include <QSize>
 #include <QDebug>
+
 Game::Game(QWidget *parent)
     : QWidget(parent)
 {
@@ -26,16 +27,23 @@ void Game::init()
     this->initColorList();
     this->turn = 1;
     this->lost = false;
+    timer = new QTimer(this);
+    connect(timer, &QTimer::timeout, this,&Game::timerUpdate);
+    q = QTime::fromString("00:00:00");
+    timer->start(1000);
+    this->timerIsCounting = false;
 
 
     vLayout = new QVBoxLayout(this);
     hInfoGame = new QHBoxLayout();
     labelColorToKill = new QLabel();
     labelTurn = new QLabel("Turn : " + QString::number(this->turn));
+    timeLabel = new QLabel(q.toString("hh:mm:ss"));
 
 
     hInfoGame->addWidget(labelColorToKill);
     hInfoGame->addWidget(labelTurn);
+    hInfoGame->addWidget(timeLabel);
 
 
     vLayout->addLayout(hInfoGame);
@@ -171,7 +179,7 @@ void Game::lose()
 }
 
 void Game::doSpecialTurn(){
-    if(this->turn < 2){
+    if(this->turn <= 2){
         this->easyTurn();
     }
     else if(this->turn > 2){
@@ -184,7 +192,7 @@ void Game::doSpecialTurn(){
 
 void Game::easyTurn()
 {
-
+    qDebug() << "easyTurn";
     QString colorRandom = this->getRandomColorFrom(this->listColor);
     for(int i =0; i< vButtonColor.size(); ++i){
         QString colorRandom = this->getRandomColorFrom(this->listColor);
@@ -194,4 +202,19 @@ void Game::easyTurn()
     this->colorToKill = this->getRandomColorShowed();
     this->colorToKillSize = this->getColorToKillSize();
 
+}
+
+void Game::timeTurn(int secondes)
+{
+    qDebug() << "timeTurn";
+    this->easyTurn();
+    secondes = secondes * 1000;
+
+}
+
+void Game::timerUpdate()
+{
+    q = q.addSecs(1);
+    timeLabel->setText(q.toString("hh:mm:ss"));
+    qDebug() << q.toString("hh:mm:ss");
 }

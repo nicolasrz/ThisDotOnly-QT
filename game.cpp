@@ -70,8 +70,7 @@ void Game::init()
     }
     this->colorToKill = this->getRandomColorShowed();
     this->colorToKillSize = this->getColorToKillSize();
-    labelColorToKill->setText("Kill this dot only ! -> " + this->colorToKill);
-    labelColorToKill->setStyleSheet("QLabel{color : "+this->colorToKill+" }");
+    labelColorToKill->setText(this->colorToKill);
     qDebug() << this->colorToKill;
     qDebug() << this->colorToKillSize;
 
@@ -193,18 +192,19 @@ void Game::doSpecialTurn(){
     }else{
         this->easyTurn();
     }
-    labelColorToKill->setText("Kill this dot only ! -> " + this->colorToKill);
-    labelColorToKill->setStyleSheet("QLabel{color : "+this->colorToKill+" }");
+    labelColorToKill->setText(this->colorToKill);
+
 }
 
 void Game::easyTurn()
 {
     qDebug() << "easyTurn";
-    QString colorRandom = this->getRandomColorFrom(this->listColor);
+    //QString colorRandom = this->getRandomColorFrom(this->listColor);
     for(int i =0; i< vButtonColor.size(); ++i){
         QString colorRandom = this->getRandomColorFrom(this->listColor);
         vButtonColor[i]->setColor(colorRandom);
         vButtonColor[i]->getButton()->setStyleSheet(this->changeColorButtonTo(colorRandom));
+        this->completeListColorShowed(colorRandom);
     }
     this->colorToKill = this->getRandomColorShowed();
     this->colorToKillSize = this->getColorToKillSize();

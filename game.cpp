@@ -143,13 +143,10 @@ int Game::getColorToKillSize()
 
 
 void Game::newTurn(){
-    //this->listColorShowed.clear();
     this->turn++;
     this->timerIsCounting = false;
     labelTurn->setText("Turn : " + QString::number(this->turn));
-    q = QTime::fromString("00:00:05");
-    timeLabel->setText(q.toString("hh:mm:ss"));
-    this->doSpecialTurn();
+    this->caseTurn();
     qDebug() << this->colorToKill;
     qDebug() << this->colorToKillSize;
     qDebug() << "Kill the dot with the color :" + this->colorToKill;
@@ -174,32 +171,36 @@ void Game::lose()
 {
     this->lost = true;
     this->timerIsCounting = false;
+
     QMessageBox msgBox;
     msgBox.setText("You loose at turn " + QString::number(this->turn));
     msgBox.exec();
+    timeLabel->setText("");
     this->turn = 0 ;
     this->newTurn();
 }
 
-void Game::doSpecialTurn(){
+void Game::caseTurn(){
     if(this->turn <= 2){
-        this->easyTurn();
+        this->firstStep();
     }
     else if(this->turn > 2){
         this->timerIsCounting = true;
+        q = QTime::fromString("00:00:05");
+        timeLabel->setText(q.toString("ss"));
         hInfoGame->addWidget(timeLabel);
-        this->easyTurn();
+
+        this->firstStep();
     }else{
-        this->easyTurn();
+        this->firstStep();
     }
     labelColorToKill->setText(this->colorToKill);
 
 }
 
-void Game::easyTurn()
+void Game::firstStep()
 {
-    qDebug() << "easyTurn";
-    //QString colorRandom = this->getRandomColorFrom(this->listColor);
+    qDebug() << "firstStep";
     for(int i =0; i< vButtonColor.size(); ++i){
         QString colorRandom = this->getRandomColorFrom(this->listColor);
         vButtonColor[i]->setColor(colorRandom);
@@ -211,14 +212,6 @@ void Game::easyTurn()
 
 }
 
-void Game::timeTurn(int secondes)
-{
-    qDebug() << "timeTurn";
-    this->easyTurn();
-    secondes = secondes * 1000;
-
-}
-
 void Game::timerUpdate()
 {
     if(this->timerIsCounting){
@@ -227,7 +220,7 @@ void Game::timerUpdate()
         if(q.toString("ss").toInt() == 0){
             this->lose();
         }
-        qDebug() << q.toString("ss");
     }
+
 
 }

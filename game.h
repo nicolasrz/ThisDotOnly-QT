@@ -47,9 +47,8 @@ public:
     void reset();
     void completeListColorShowed(QString colorRandom);
     void lose();
-    void doSpecialTurn();
-    void easyTurn();
-    void timeTurn(int secondes);
+    void caseTurn();
+    void firstStep();
 public slots:
     void killThisDot();
     void timerUpdate();

@@ -1,7 +1,6 @@
 #include "game.h"
 #include <QDateTime>
 #include "time.h"
-
 #include <QMessageBox>
 #include <QSize>
 #include <QDebug>
@@ -27,11 +26,7 @@ void Game::init()
     this->initColorList();
     this->turn = 1;
     this->lost = false;
-    timer = new QTimer(this);
-    connect(timer, &QTimer::timeout, this,&Game::timerUpdate);
-    q = QTime::fromString("00:00:05");
-    timer->start(1000);
-    this->timerIsCounting = false;
+    initTimer();
 
 
     vLayout = new QVBoxLayout(this);
@@ -43,41 +38,53 @@ void Game::init()
 
     hInfoGame->addWidget(labelColorToKill);
     hInfoGame->addWidget(labelTurn);
-
-
-
     vLayout->addLayout(hInfoGame);
+    initGrille();
+    addRandomColorInGrill();
+}
 
-
+void Game::initGrille()
+{
     for(int i =0; i < 25 ; ++i){
         if(i%5 == 0){
             hLayout = new QHBoxLayout();
         }
 
         QPointer<QPushButton> button = new QPushButton();
-        QString colorRandom = this->getRandomColorFrom(this->listColor);
-
         button->setObjectName(QString::number(i));
-        button->setStyleSheet(this->changeColorButtonTo(colorRandom));
-
-        this->completeListColorShowed(colorRandom);
-
-        ButtonColor *buttonColor = new ButtonColor(button, colorRandom, i);
+        ButtonColor *buttonColor = new ButtonColor(button, "white", i);
         vButtonColor.append(buttonColor);
         connect(button, &QPushButton::clicked, this, &Game::killThisDot) ;
         hLayout->addWidget(button);
         vLayout->addLayout(hLayout);
     }
-    this->colorToKill = this->getRandomColorShowed();
-    this->colorToKillSize = this->getColorToKillSize();
-    labelColorToKill->setText(this->colorToKill);
-    qDebug() << this->colorToKill;
-    qDebug() << this->colorToKillSize;
-
-
 }
 
+void Game::addRandomColorInGrill()
+{
+    for(int i =0; i< vButtonColor.size(); ++i){
+        QString colorRandom = this->getRandomColorFrom(this->listColor);
+        vButtonColor[i]->setColor(colorRandom);
+        vButtonColor[i]->getButton()->setStyleSheet(this->changeColorButtonTo(colorRandom));
+        this->completeListColorShowed(colorRandom);
+    }
+    this->colorToKill = this->getRandomColorShowed();
+    this->colorToKillName = hashColor.key(this->colorToKill);
+    this->colorToKillSize = this->getColorToKillSize();
+    this->labelColorToKill->setText(this->colorToKillName);
+    qDebug() << this->colorToKill;
+    qDebug() << this->colorToKillName;
+    qDebug() << this->colorToKillSize;
+}
 
+void Game::initTimer()
+{
+    timer = new QTimer(this);
+    connect(timer, &QTimer::timeout, this,&Game::timerUpdate);
+    q = QTime::fromString("00:00:05");
+    timer->start(1000);
+    this->timerIsCounting = false;
+}
 
 QString Game::getRandomColorFrom(QStringList list)
 {
@@ -122,7 +129,12 @@ void Game::killThisDot(){
 }
 
 void Game::initColorList(){
-    this->listColor << "red" << "blue" << "black" << "yellow" << "grey";
+    hashColor.insert("Green","#00FF80");
+    hashColor.insert("Blue","#3399FF");
+    hashColor.insert("Red","#FF3333");
+    hashColor.insert("Pink","#FF66B2");
+    hashColor.insert("Orange","#FF9933");
+    this->listColor << hashColor.value("Green") <<hashColor.value("Blue") << hashColor.value("Red") << hashColor.value("Pink") << hashColor.value("Orange");
 }
 
 QString Game::getRandomColorShowed()
@@ -139,17 +151,6 @@ int Game::getColorToKillSize()
         }
     }
     return count;
-}
-
-
-void Game::newTurn(){
-    this->turn++;
-    this->timerIsCounting = false;
-    labelTurn->setText("Turn : " + QString::number(this->turn));
-    this->caseTurn();
-    qDebug() << this->colorToKill;
-    qDebug() << this->colorToKillSize;
-    qDebug() << "Kill the dot with the color :" + this->colorToKill;
 }
 
 void Game::reset()
@@ -179,39 +180,6 @@ void Game::lose()
     this->turn = 0 ;
     this->newTurn();
 }
-
-void Game::caseTurn(){
-    if(this->turn <= 2){
-        this->firstStep();
-    }
-    else if(this->turn > 2){
-        this->timerIsCounting = true;
-        q = QTime::fromString("00:00:05");
-        timeLabel->setText(q.toString("ss"));
-        hInfoGame->addWidget(timeLabel);
-
-        this->firstStep();
-    }else{
-        this->firstStep();
-    }
-    labelColorToKill->setText(this->colorToKill);
-
-}
-
-void Game::firstStep()
-{
-    qDebug() << "firstStep";
-    for(int i =0; i< vButtonColor.size(); ++i){
-        QString colorRandom = this->getRandomColorFrom(this->listColor);
-        vButtonColor[i]->setColor(colorRandom);
-        vButtonColor[i]->getButton()->setStyleSheet(this->changeColorButtonTo(colorRandom));
-        this->completeListColorShowed(colorRandom);
-    }
-    this->colorToKill = this->getRandomColorShowed();
-    this->colorToKillSize = this->getColorToKillSize();
-
-}
-
 void Game::timerUpdate()
 {
     if(this->timerIsCounting){
@@ -221,6 +189,43 @@ void Game::timerUpdate()
             this->lose();
         }
     }
+}
 
+
+void Game::newTurn(){
+    this->turn++;
+    this->timerIsCounting = false;
+    labelTurn->setText("Turn : " + QString::number(this->turn));
+    this->caseTurn();
+    qDebug() << this->colorToKill;
+    qDebug() << this->colorToKillSize;
+    qDebug() << "Kill the dot with the color :" + this->colorToKill;
+}
+void Game::caseTurn(){
+    if(this->turn <= 2){
+        this->firstStep();
+    }
+    else if(this->turn > 2){
+        this->secondStep();
+    }else{
+        this->firstStep();
+    }
+    labelColorToKill->setText(this->colorToKillName);
 
 }
+
+void Game::firstStep()
+{
+    this->addRandomColorInGrill();
+}
+
+void Game::secondStep()
+{
+    this->timerIsCounting = true;
+    q = QTime::fromString("00:00:05");
+    timeLabel->setText(q.toString("ss"));
+    hInfoGame->addWidget(timeLabel);
+    this->addRandomColorInGrill();
+}
+
+

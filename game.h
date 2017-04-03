@@ -22,6 +22,7 @@ public:
     QPointer<QHBoxLayout> hInfoGame;
     QVector<ButtonColor*> vButtonColor;
     QString colorToKill;
+    QString colorToKillName;
     QStringList listColor;
     QStringList listColorShowed;
     QPointer<QLabel> labelColorToKill;
@@ -29,6 +30,7 @@ public:
     QPointer <QTimer> timer;
     QTime q;
     QPointer <QLabel> timeLabel;
+    QHash<QString, QString> hashColor;
     int turn;
     int colorToKillSize;
     bool lost;
@@ -36,19 +38,23 @@ public:
 
     QString changeColorButtonTo(QString color);
     QString getRandomColorFrom(QStringList list);
-    int getRandomNumber();
     QString getRandomColorShowed();
+
+    int getRandomNumber();
     int getColorToKillSize();
-
     void init();
-
     void initColorList();
     void newTurn();
     void reset();
     void completeListColorShowed(QString colorRandom);
     void lose();
+    void initTimer();  
+    void initGrille();
+    void addRandomColorInGrill();
     void caseTurn();
     void firstStep();
+    void secondStep();
+
 public slots:
     void killThisDot();
     void timerUpdate();

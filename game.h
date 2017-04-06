@@ -23,6 +23,7 @@ public:
     QVector<ButtonColor*> vButtonColor;
     QString colorToKill;
     QString colorToKillName;
+    QString lastRandomColor;
     QStringList listColor;
     QStringList listColorShowed;
     QPointer<QLabel> labelColorToKill;
@@ -31,17 +32,24 @@ public:
     QTime q;
     QPointer <QLabel> timeLabel;
     QHash<QString, QString> hashColor;
+    QStringList colorAndOr;
+    QString colorChoosen;
+    int nbClick;
+    int andor;
+    int currentStep;
     int turn;
     int colorToKillSize;
     bool lost;
     bool timerIsCounting;
+
 
     QString changeColorButtonTo(QString color);
     QString getRandomColorFrom(QStringList list);
     QString getRandomColorShowed();
 
     int getRandomNumber();
-    int getColorToKillSize();
+    int getRandomNumber(int min, int max);
+    int getColorToKillSize(QString color);
     void init();
     void initColorList();
     void newTurn();
@@ -51,9 +59,15 @@ public:
     void initTimer();  
     void initGrille();
     void addRandomColorInGrill();
-    void caseTurn();
-    void firstStep();
-    void secondStep();
+    void step1();
+    void step2();
+    void step3();
+
+    QString colorDifferent(QString last, QString current);
+
+
+    void toWinStep1and2(int position);
+    void toWinStep3(int position);
 
 public slots:
     void killThisDot();

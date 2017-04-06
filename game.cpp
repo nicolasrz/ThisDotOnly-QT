@@ -9,7 +9,7 @@ Game::Game(QWidget *parent)
     : QWidget(parent)
 {
 
-    this->init();
+    init();
 }
 
 Game::~Game()
@@ -23,24 +23,28 @@ void Game::init()
     // That is needed only once on application startup
     QTime time = QTime::currentTime();
     qsrand((uint)time.msec());
-    this->initColorList();
-    this->turn = 1;
-    this->lost = false;
+    initColorList();
+    turn = 0;
+    lost = false;
+    currentStep = 0;
     initTimer();
 
 
     vLayout = new QVBoxLayout(this);
     hInfoGame = new QHBoxLayout();
     labelColorToKill = new QLabel();
-    labelTurn = new QLabel("Turn : " + QString::number(this->turn));
+    labelTurn = new QLabel("Turn : " + QString::number(turn));
     timeLabel = new QLabel(q.toString("ss"));
 
 
     hInfoGame->addWidget(labelColorToKill);
     hInfoGame->addWidget(labelTurn);
     vLayout->addLayout(hInfoGame);
+    lastRandomColor = "white";
+    colorToKill = "white";
     initGrille();
     addRandomColorInGrill();
+    newTurn();
 }
 
 void Game::initGrille()
@@ -62,19 +66,15 @@ void Game::initGrille()
 
 void Game::addRandomColorInGrill()
 {
+    listColorShowed.clear();
     for(int i =0; i< vButtonColor.size(); ++i){
-        QString colorRandom = this->getRandomColorFrom(this->listColor);
+        QString colorRandom = getRandomColorFrom(listColor);
         vButtonColor[i]->setColor(colorRandom);
-        vButtonColor[i]->getButton()->setStyleSheet(this->changeColorButtonTo(colorRandom));
-        this->completeListColorShowed(colorRandom);
+        vButtonColor[i]->getButton()->setStyleSheet(changeColorButtonTo(colorRandom));
+        completeListColorShowed(colorRandom);
     }
-    this->colorToKill = this->getRandomColorShowed();
-    this->colorToKillName = hashColor.key(this->colorToKill);
-    this->colorToKillSize = this->getColorToKillSize();
-    this->labelColorToKill->setText(this->colorToKillName);
-    qDebug() << this->colorToKill;
-    qDebug() << this->colorToKillName;
-    qDebug() << this->colorToKillSize;
+
+
 }
 
 void Game::initTimer()
@@ -83,12 +83,12 @@ void Game::initTimer()
     connect(timer, &QTimer::timeout, this,&Game::timerUpdate);
     q = QTime::fromString("00:00:05");
     timer->start(1000);
-    this->timerIsCounting = false;
+    timerIsCounting = false;
 }
 
 QString Game::getRandomColorFrom(QStringList list)
 {
-    int random = this->getRandomNumber();
+    int random = getRandomNumber();
     if(random == list.size()){
         random--;
     }
@@ -97,7 +97,10 @@ QString Game::getRandomColorFrom(QStringList list)
 
 int Game::getRandomNumber(){
     int min = 0;
-    int max = this->listColor.size();
+    int max = listColor.size();
+    return qrand() % ((max + 1) - min) + min;
+}
+int Game::getRandomNumber(int min,  int max){
     return qrand() % ((max + 1) - min) + min;
 }
 
@@ -112,20 +115,21 @@ void Game::killThisDot(){
     QObject *senderObj = sender(); // This will give Sender object
     int position = senderObj->objectName().toInt();
 
-    if(vButtonColor[position]->getColor() == this->colorToKill)
-    {
-        vButtonColor[position]->getButton()->setStyleSheet(this->changeColorButtonTo("white"));
-        --this->colorToKillSize;
-
-        if(this->colorToKillSize == 0){
-            qDebug() << "next" ;
-            this->lost = false;
-            this->newTurn();
-        }
-    }else
-    {
-        this->lose();
+    switch (currentStep) {
+    case 1:
+        toWinStep1and2(position);
+        break;
+    case 2:
+        toWinStep1and2(position);
+        break;
+    case 3:
+        toWinStep3(position);
+        break;
+    default:
+        break;
     }
+
+
 }
 
 void Game::initColorList(){
@@ -134,19 +138,19 @@ void Game::initColorList(){
     hashColor.insert("Red","#FF3333");
     hashColor.insert("Pink","#FF66B2");
     hashColor.insert("Orange","#FF9933");
-    this->listColor << hashColor.value("Green") <<hashColor.value("Blue") << hashColor.value("Red") << hashColor.value("Pink") << hashColor.value("Orange");
+    listColor << hashColor.value("Green") <<hashColor.value("Blue") << hashColor.value("Red") << hashColor.value("Pink") << hashColor.value("Orange");
 }
 
 QString Game::getRandomColorShowed()
 {
-    return this->getRandomColorFrom(this->listColorShowed);
+    return getRandomColorFrom(listColorShowed);
 }
 
-int Game::getColorToKillSize()
+int Game::getColorToKillSize(QString color)
 {
     int count = 0;
     for(int i = 0; i< vButtonColor.size(); ++i){
-        if(vButtonColor[i]->getColor() == this->colorToKill){
+        if(vButtonColor[i]->getColor() == color){
             ++count;
         }
     }
@@ -163,69 +167,186 @@ void Game::reset()
 
 void Game::completeListColorShowed(QString colorRandom)
 {
-    if(!this->listColorShowed.contains(colorRandom)){
-        this->listColorShowed.append(colorRandom);
+    if(!listColorShowed.contains(colorRandom)){
+        listColorShowed.append(colorRandom);
     }
 }
 
 void Game::lose()
 {
-    this->lost = true;
-    this->timerIsCounting = false;
+    lost = true;
+    timerIsCounting = false;
 
     QMessageBox msgBox;
-    msgBox.setText("You loose at turn " + QString::number(this->turn));
+    msgBox.setText("You loose at turn " + QString::number(turn));
     msgBox.exec();
     timeLabel->setText("");
-    this->turn = 0 ;
-    this->newTurn();
+    turn = 0 ;
+    newTurn();
 }
 void Game::timerUpdate()
 {
-    if(this->timerIsCounting){
+    if(timerIsCounting){
         q = q.addSecs(-1);
         timeLabel->setText(q.toString("ss"));
         if(q.toString("ss").toInt() == 0){
-            this->lose();
+            lose();
         }
     }
 }
 
 
 void Game::newTurn(){
-    this->turn++;
-    this->timerIsCounting = false;
-    labelTurn->setText("Turn : " + QString::number(this->turn));
-    this->caseTurn();
-    qDebug() << this->colorToKill;
-    qDebug() << this->colorToKillSize;
-    qDebug() << "Kill the dot with the color :" + this->colorToKill;
-}
-void Game::caseTurn(){
-    if(this->turn <= 2){
-        this->firstStep();
+    turn++;
+    timerIsCounting = false;
+    colorToKill = lastRandomColor;
+    labelTurn->setText("Turn : " + QString::number(turn));
+
+    if(turn <= 15){
+        step3();
     }
-    else if(this->turn > 2){
-        this->secondStep();
+    else if(turn > 3 &&  turn <= 5){
+        step2();
+    }else if(turn > 5){
+            step3();
+
     }else{
-        this->firstStep();
+        step3();
     }
-    labelColorToKill->setText(this->colorToKillName);
 
 }
 
-void Game::firstStep()
+
+QString Game::colorDifferent(QString last, QString current)
 {
-    this->addRandomColorInGrill();
+    while(current == last){
+        current = getRandomColorShowed();
+    }
+    return current;
 }
 
-void Game::secondStep()
+
+void Game::step1()
 {
-    this->timerIsCounting = true;
+    qDebug() << "Step1";
+    currentStep = 1;
+    addRandomColorInGrill();
+    colorToKill = colorDifferent(lastRandomColor, colorToKill);
+    lastRandomColor = colorToKill;
+    colorToKillName = hashColor.key(colorToKill);
+    labelColorToKill->setText(colorToKillName);
+    qDebug() << colorToKillName;
+    qDebug() << colorToKillSize;
+    colorToKillSize = getColorToKillSize(colorToKill);
+
+}
+
+void Game::step2()
+{
+    qDebug() << "Step2";
+    currentStep = 2;
     q = QTime::fromString("00:00:05");
     timeLabel->setText(q.toString("ss"));
     hInfoGame->addWidget(timeLabel);
-    this->addRandomColorInGrill();
+    addRandomColorInGrill();
+    colorToKill = colorDifferent(lastRandomColor, colorToKill);
+    lastRandomColor = colorToKill;
+    colorToKillName = hashColor.key(colorToKill);
+    labelColorToKill->setText(colorToKillName);
+    qDebug() << colorToKillName;
+    qDebug() << colorToKillSize;
+    colorToKillSize = getColorToKillSize(colorToKill);
+    timerIsCounting = true;
 }
+void Game::toWinStep1and2(int position)
+{
+    if(vButtonColor[position]->getColor() == colorToKill)
+    {
+        vButtonColor[position]->getButton()->setStyleSheet(changeColorButtonTo("white"));
+        vButtonColor[position]->setColor("white");
+        --colorToKillSize;
+
+        if(colorToKillSize == 0){
+            lost = false;
+            newTurn();
+        }
+    }else
+    {
+        lose();
+    }
+}
+
+
+
+void Game::step3()
+{
+    qDebug() << "Step3";
+    currentStep = 3;
+    timeLabel->setText("");
+    addRandomColorInGrill();
+
+    QString firstColor = getRandomColorShowed();
+    QString secondColor = colorDifferent(firstColor, firstColor);
+    colorAndOr.clear();
+    colorAndOr.append(firstColor);
+    colorAndOr.append(secondColor);
+
+    andor = getRandomNumber(0,1);
+    if(andor == 0){
+        labelColorToKill->setText(hashColor.key(firstColor)+ " AND " + hashColor.key(secondColor));
+        colorToKillSize = getColorToKillSize(firstColor) + getColorToKillSize(secondColor);
+    }else{
+        colorToKillSize = 0;
+        nbClick = 0;
+        colorChoosen = "white";
+        labelColorToKill->setText(hashColor.key(firstColor)+ " OR " + hashColor.key(secondColor));
+    }
+}
+
+
+void Game::toWinStep3(int position)
+{
+    QString  colorClicked = vButtonColor[position]->getColor();
+    //0 alors AND et timer à 10
+    if(andor == 0){
+        QString firstColor = colorAndOr[0];
+        QString secondColor = colorAndOr[1];
+        if( colorClicked == firstColor || colorClicked == secondColor){
+            vButtonColor[position]->getButton()->setStyleSheet(changeColorButtonTo("white"));
+            vButtonColor[position]->setColor("white");
+            --colorToKillSize;
+            if(colorToKillSize == 0){
+                lost = false;
+                newTurn();
+            }
+        }else{
+            lose();
+        }
+        //OR
+    }else{
+        nbClick++;
+        if(nbClick == 1){
+            colorChoosen = vButtonColor[position]->getColor();
+            colorToKillSize = getColorToKillSize(colorChoosen);
+        }
+        if(vButtonColor[position]->getColor() == colorChoosen){
+            --colorToKillSize;
+            vButtonColor[position]->getButton()->setStyleSheet(changeColorButtonTo("white"));
+            vButtonColor[position]->setColor("white");
+
+            if(colorToKillSize == 0){
+                lost = false;
+                newTurn();
+            }
+
+        }else{
+            this->lose();
+        }
+    }
+}
+
+
+
+
 
 

@@ -5,11 +5,13 @@ ButtonColor::ButtonColor()
 
 }
 
-ButtonColor::ButtonColor(QPointer<QPushButton> button, QString color, int pos)
+ButtonColor::ButtonColor(QPointer<QPushButton> button, QString color, int pos, QString shape)
 {
     this->button = button;
     this->color = color;
     this->position = pos;
+    this->shape = shape;
+
 }
 
 ButtonColor::~ButtonColor()
@@ -44,6 +46,17 @@ int ButtonColor::getPosition()
 void ButtonColor::setPosition(int pos)
 {
     this->position = pos;
+}
+
+
+QString ButtonColor::getShape()
+{
+    return this->shape;
+}
+
+void ButtonColor::setShape(QString shape)
+{
+    this->shape = shape;
 }
 
 

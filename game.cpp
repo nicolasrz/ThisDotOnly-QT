@@ -24,6 +24,7 @@ void Game::init()
     QTime time = QTime::currentTime();
     qsrand((uint)time.msec());
     initColorList();
+    initShape();
     turn = 0;
     lost = false;
     currentStep = 0;
@@ -43,7 +44,7 @@ void Game::init()
     lastRandomColor = "white";
     colorToKill = "white";
     initGrille();
-    addRandomColorInGrill();
+    addRandomColorInGrill(false);
     newTurn();
 }
 
@@ -56,7 +57,7 @@ void Game::initGrille()
 
         QPointer<QPushButton> button = new QPushButton();
         button->setObjectName(QString::number(i));
-        ButtonColor *buttonColor = new ButtonColor(button, "white", i);
+        ButtonColor *buttonColor = new ButtonColor(button, "white", i, "circle");
         vButtonColor.append(buttonColor);
         connect(button, &QPushButton::clicked, this, &Game::killThisDot) ;
         hLayout->addWidget(button);
@@ -64,14 +65,27 @@ void Game::initGrille()
     }
 }
 
-void Game::addRandomColorInGrill()
+void Game::addRandomColorInGrill(bool changeShape)
 {
     listColorShowed.clear();
+    listShapeShowed.clear();
+
     for(int i =0; i< vButtonColor.size(); ++i){
         QString colorRandom = getRandomColorFrom(listColor);
         vButtonColor[i]->setColor(colorRandom);
-        vButtonColor[i]->getButton()->setStyleSheet(changeColorButtonTo(colorRandom));
         completeListColorShowed(colorRandom);
+
+        if(changeShape){
+            QString shapeRandom = getRandomShape(listShape);
+            completeListShapeShowed(shapeRandom);
+            if(shapeRandom == "square"){
+                vButtonColor[i]->getButton()->setStyleSheet("QPushButton#"+QString::number(i)+"{ border-radius:0px; background-color:"+colorRandom+"}");
+            }
+            vButtonColor[i]->setShape(shapeRandom);
+        }else{
+            vButtonColor[i]->getButton()->setStyleSheet(changeColorButtonTo(colorRandom));
+        }
+
     }
 
 
@@ -95,6 +109,15 @@ QString Game::getRandomColorFrom(QStringList list)
     return list.at(random);
 }
 
+QString Game::getRandomShape(QStringList list)
+{
+    int random = getRandomNumber(0,1);
+    if(random == list.size()){
+        random--;
+    }
+    return list.at(random);
+}
+
 int Game::getRandomNumber(){
     int min = 0;
     int max = listColor.size();
@@ -109,6 +132,7 @@ QString Game::changeColorButtonTo(QString color)
     QString styleSheet = "QPushButton{background-color :"+color+";border:"+color+";}";
     return styleSheet;
 }
+
 
 void Game::killThisDot(){
     QTextStream out(stdout);
@@ -125,6 +149,8 @@ void Game::killThisDot(){
     case 3:
         toWinStep3(position);
         break;
+    case 4:
+        toWinStep4(position);
     default:
         break;
     }
@@ -139,6 +165,10 @@ void Game::initColorList(){
     hashColor.insert("Pink","#FF66B2");
     hashColor.insert("Orange","#FF9933");
     listColor << hashColor.value("Green") <<hashColor.value("Blue") << hashColor.value("Red") << hashColor.value("Pink") << hashColor.value("Orange");
+}
+
+void Game::initShape(){
+    listShape << "circle" <<  "square";
 }
 
 QString Game::getRandomColorShowed()
@@ -169,6 +199,12 @@ void Game::completeListColorShowed(QString colorRandom)
 {
     if(!listColorShowed.contains(colorRandom)){
         listColorShowed.append(colorRandom);
+    }
+}
+void Game::completeListShapeShowed(QString shapeRandom)
+{
+    if(!listShapeShowed.contains(shapeRandom)){
+        listShapeShowed.append(shapeRandom);
     }
 }
 
@@ -203,7 +239,7 @@ void Game::newTurn(){
     labelTurn->setText("Turn : " + QString::number(turn));
 
     if(turn <= 4){
-        step1();
+        step4();
     }
     else if(turn > 4 &&  turn <= 8){
         step2();
@@ -230,7 +266,7 @@ void Game::step1()
 {
     qDebug() << "Step1";
     currentStep = 1;
-    addRandomColorInGrill();
+    addRandomColorInGrill(false);
     colorToKill = colorDifferent(lastRandomColor, colorToKill);
     lastRandomColor = colorToKill;
     colorToKillName = hashColor.key(colorToKill);
@@ -248,7 +284,7 @@ void Game::step2()
     q = QTime::fromString("00:00:05");
     timeLabel->setText(q.toString("ss"));
     hInfoGame->addWidget(timeLabel);
-    addRandomColorInGrill();
+    addRandomColorInGrill(false);
     colorToKill = colorDifferent(lastRandomColor, colorToKill);
     lastRandomColor = colorToKill;
     colorToKillName = hashColor.key(colorToKill);
@@ -284,7 +320,7 @@ void Game::step3()
     currentStep = 3;
 
 
-    addRandomColorInGrill();
+    addRandomColorInGrill(false);
 
     QString firstColor = getRandomColorShowed();
     QString secondColor = colorDifferent(firstColor, firstColor);
@@ -353,6 +389,24 @@ void Game::toWinStep3(int position)
     }
 }
 
+void Game::step4(){
+    qDebug() << "Step4";
+    currentStep = 4;
+    addRandomColorInGrill(true);
+
+    shapeOr = getRandomShape(listShape);
+    //circle
+    if(shapeOr == "circle"){
+
+    //square
+    }else{
+
+    }
+}
+
+void Game::toWinStep4(int position){
+
+}
 
 
 

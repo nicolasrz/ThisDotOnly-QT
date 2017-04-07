@@ -7,7 +7,7 @@ class ButtonColor
 {
 public:
     ButtonColor();
-    ButtonColor(QPointer<QPushButton> button, QString color, int position);
+    ButtonColor(QPointer<QPushButton> button, QString color, int position, QString shape);
     ~ButtonColor();
 
     QPointer<QPushButton> getButton();
@@ -19,10 +19,14 @@ public:
     int getPosition();
     void setPosition(int pos);
 
+    QString getShape();
+    void setShape(QString shape);
+
 private:
     QPointer<QPushButton> button;
     QString color;
     int position;
+    QString shape;
 
 
 };

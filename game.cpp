@@ -239,7 +239,7 @@ void Game::newTurn(){
     labelTurn->setText("Turn : " + QString::number(turn));
 
     if(turn <= 4){
-        step4();
+        step1();
     }
     else if(turn > 4 &&  turn <= 8){
         step2();
@@ -389,20 +389,20 @@ void Game::toWinStep3(int position)
     }
 }
 
-void Game::step4(){
-    qDebug() << "Step4";
-    currentStep = 4;
-    addRandomColorInGrill(true);
+//void Game::step4(){
+//    qDebug() << "Step4";
+//    currentStep = 4;
+//    addRandomColorInGrill(true);
 
-    shapeOr = getRandomShape(listShape);
-    //circle
-    if(shapeOr == "circle"){
+//    shapeOr = getRandomShape(listShape);
+//    //circle
+//    if(shapeOr == "circle"){
 
-    //square
-    }else{
+//    //square
+//    }else{
 
-    }
-}
+//    }
+//}
 
 void Game::toWinStep4(int position){
 

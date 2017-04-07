@@ -202,17 +202,17 @@ void Game::newTurn(){
     colorToKill = lastRandomColor;
     labelTurn->setText("Turn : " + QString::number(turn));
 
-    if(turn <= 15){
-        step3();
+    if(turn <= 4){
+        step1();
     }
-    else if(turn > 3 &&  turn <= 5){
+    else if(turn > 4 &&  turn <= 8){
         step2();
-    }else if(turn > 5){
+    }else if(turn > 8){
             step3();
 
-    }else{
+    }/*else{
         step3();
-    }
+    }*/
 
 }
 
@@ -282,7 +282,8 @@ void Game::step3()
 {
     qDebug() << "Step3";
     currentStep = 3;
-    timeLabel->setText("");
+
+
     addRandomColorInGrill();
 
     QString firstColor = getRandomColorShowed();
@@ -292,15 +293,22 @@ void Game::step3()
     colorAndOr.append(secondColor);
 
     andor = getRandomNumber(0,1);
+    //AND
     if(andor == 0){
         labelColorToKill->setText(hashColor.key(firstColor)+ " AND " + hashColor.key(secondColor));
         colorToKillSize = getColorToKillSize(firstColor) + getColorToKillSize(secondColor);
+        q = QTime::fromString("00:00:10");
+    //OR
     }else{
         colorToKillSize = 0;
         nbClick = 0;
         colorChoosen = "white";
         labelColorToKill->setText(hashColor.key(firstColor)+ " OR " + hashColor.key(secondColor));
+        q = QTime::fromString("00:00:07");
     }
+    timeLabel->setText(q.toString("ss"));
+    hInfoGame->addWidget(timeLabel);
+    timerIsCounting = true;
 }
 
 

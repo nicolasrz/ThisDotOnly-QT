@@ -22,7 +22,6 @@ StartScreen::StartScreen(QWidget *parent)
     connect(buttonStartGame, &QPushButton::clicked, this, &StartScreen::startGame) ;
     connect(buttonShowScore, &QPushButton::clicked, this, &StartScreen::showScore) ;
     connect(buttonQuitGame, &QPushButton::clicked, this, &StartScreen::quitGame) ;
-    qDebug() << "startscreen";
 
 }
 

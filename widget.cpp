@@ -8,10 +8,10 @@
 
 Widget::Widget(QWidget *parent)
 {
-    QScreen *screen = QGuiApplication::primaryScreen();
-    QRect  screenGeometry = screen->geometry();
-    this->heightScreen = screenGeometry.height();
-    this->widthScreen = screenGeometry.width();
+//    QScreen *screen = QGuiApplication::primaryScreen();
+//    QRect  screenGeometry = screen->geometry();
+//    this->heightScreen = screenGeometry.height();
+//    this->widthScreen = screenGeometry.width();
 //    this->setMinimumHeight(this->heightScreen);
 //    this->setMinimumWidth(this->widthScreen);
 

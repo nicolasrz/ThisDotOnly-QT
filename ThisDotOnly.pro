@@ -25,14 +25,22 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += main.cpp\
         widget.cpp \
-    buttoncolor.cpp \
     game.cpp \
-    startscreen.cpp
+    startscreen.cpp \
+    parameter.cpp \
+    ownbutton.cpp \
+    turn.cpp \
+    owncustombutton.cpp \
+    owncustomcolor.cpp
 
 HEADERS  += widget.h \
-    buttoncolor.h \
     game.h \
-    startscreen.h
+    startscreen.h \
+    parameter.h \
+    ownbutton.h \
+    turn.h \
+    owncustombutton.h \
+    owncustomcolor.h
 
 RESOURCES += \
     resources.qrc

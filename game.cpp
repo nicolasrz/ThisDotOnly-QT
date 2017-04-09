@@ -32,9 +32,13 @@ void Game::init()
     hInfoGame = new QHBoxLayout();
     labelKill = new QLabel("Kill : ");
     labelButtonToKill = new QLabel();
+    labelTurn = new QLabel("Turn : ");
+    labelTurnCount = new QLabel();
 
     hInfoGame->addWidget(labelKill);
     hInfoGame->addWidget(labelButtonToKill);
+    hInfoGame->addWidget(labelTurn);
+    hInfoGame->addWidget(labelTurnCount);
 
     vLayout->addLayout(hInfoGame);
 
@@ -67,15 +71,18 @@ void Game::newTurn()
         delete turn;
         turn = new Turn();
     }
+    touchedDotCount = 0;
     changeButtonInGrille();
     turn->stepIncrement();
     turn->countIncrement();
     int currentTurn = turn->getCount();
+    labelTurnCount->setText(QString::number(currentTurn));
     switch (currentTurn) {
     case 1:
         step1();
         break;
     default:
+        step1();
         break;
     }
 }
@@ -93,6 +100,7 @@ void Game::changeButtonInGrille()
         QPointer<OwnCustomColor> randomOwnCustomColor = parameter->getRandomOwnCustomColor();
         buttonAddedInGrille[i]->getOwnCustomButton()->setOwnCustomColor(randomOwnCustomColor);
         buttonAddedInGrille[i]->getButton()->setStyleSheet("QPushButton{background-color:"+buttonAddedInGrille[i]->getOwnCustomButton()->getOwnCustomColor()->getHexa()+"}");
+        buttonAddedInGrille[i]->getButton()->setEnabled(true);
     }
 }
 
@@ -126,10 +134,11 @@ void Game::toWinStep1(int position)
 {
     if(buttonAddedInGrille[position]->getOwnCustomButton()->getOwnCustomColor()->getHexa() ==
             turn->getOwnButtonToKill()->getOwnCustomButton()->getOwnCustomColor()->getHexa()){
-        turn->touchedDotIncrement();
+        buttonAddedInGrille[position]->getButton()->setDisabled(true);
+        touchedDotCountIncrement();
         removeOwnButtonFromGrille(buttonAddedInGrille[position]);
-        if(turn->getDotToKillSize() == turn->getTouchedDot() ){
-            qDebug() << "win";
+        if(turn->getDotToKillSize() == getTouchedDotCount() ){
+            turn->setWin(true);
             newTurn();
         }
     }else{
@@ -150,8 +159,16 @@ void Game::touchDot()
         toWinStep1(position);
         break;
     default:
+        toWinStep1(position);
         break;
     }
+}
+
+void Game::touchedDotCountIncrement(){
+    touchedDotCount++;
+}
+int Game::getTouchedDotCount(){
+    return touchedDotCount;
 }
 
 

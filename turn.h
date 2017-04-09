@@ -32,6 +32,7 @@ public:
 
     int getTouchedDot();
     void touchedDotIncrement();
+    void resetTouchedDot();
 
 private:
     int count;

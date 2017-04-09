@@ -27,12 +27,15 @@ public:
     QPointer<OwnButton> buttonToKill;
     QPointer<QLabel> labelKill;
     QPointer<QLabel> labelButtonToKill;
+    QPointer<QLabel> labelTurn;
+    QPointer<QLabel> labelTurnCount;
 
-
+    void touchedDotCountIncrement();
+    int getTouchedDotCount();
 private:
     void init();
     void initGrille();
-
+    int touchedDotCount;
     QPointer<OwnButton> getRandomOwnButtonShowed();
     void changeButtonInGrille();
     void removeOwnButtonFromGrille(QPointer<OwnButton> ownButtonToRemove);

@@ -82,14 +82,14 @@ void Game::newTurn()
     }
     touchedDotCount = 0;
     changeButtonInGrille();
-    turn->stepIncrement();
+
     turn->countIncrement();
     int currentTurn = turn->getCount();
     labelTurnCount->setText(QString::number(currentTurn));
-    if(currentTurn < 3){
-        step3();
+    if(currentTurn <= 3){
+        step1();
     }else if(currentTurn > 3 && currentTurn <= 5){
-        step3();
+        step2();
     }else{
         step3();
     }
@@ -180,6 +180,7 @@ void Game::toWinStep2(int position){
 void Game::step3()
 {
     qDebug() << "Step3";
+    labelTime->setText("");
     turn->clearMultiButtonToKill();
     QPointer<OwnButton> firstButtonToKill =  getRandomOwnButtonShowed();
     QPointer<OwnButton> secondButtonToKill =  getRandomOwnButtonShowed();
@@ -190,8 +191,8 @@ void Game::step3()
     turn->addInMultiButtonToKill(firstButtonToKill);
     turn->addInMultiButtonToKill(secondButtonToKill);
 
-    //int andOr = parameter->getRandomNumber(0, 1);
-    int andOr = 1;
+    int andOr = parameter->getRandomNumber(0, 1);
+
     if(andOr == 0){
         turn->setColorAndOr("or");
         labelButtonToKill->setText(firstButtonToKill->getOwnCustomButton()->getOwnCustomColor()->getName() +" OR " +
@@ -211,9 +212,17 @@ void Game::step3()
 
 void Game::toWinStep3(int position)
 {
-    if("and" == "and"){
-    //if(turn->getColorAndOr() == "and"){
-        touchedDotCountIncrement();
+
+    touchedDotCountIncrement();
+    int andor = 0;
+    if(turn->getColorAndOr() == "or"){
+        andor = 0;
+    }else{
+        andor = 1;
+    }
+    switch (andor) {
+    case 1:
+
 
         if(buttonAddedInGrille[position]->getOwnCustomButton()->getOwnCustomColor()->getHexa() ==
                 turn->getMultiButtonToKill()[0]->getOwnCustomButton()->getOwnCustomColor()->getHexa()
@@ -231,6 +240,41 @@ void Game::toWinStep3(int position)
             turn->setWin(false);
             newTurn();
         }
+        break;
+    case 0:
+        if(buttonAddedInGrille[position]->getOwnCustomButton()->getOwnCustomColor()->getHexa() ==
+                turn->getMultiButtonToKill()[0]->getOwnCustomButton()->getOwnCustomColor()->getHexa()
+                ||
+                buttonAddedInGrille[position]->getOwnCustomButton()->getOwnCustomColor()->getHexa() ==
+                turn->getMultiButtonToKill()[1]->getOwnCustomButton()->getOwnCustomColor()->getHexa()
+                )
+        {
+
+            if(getTouchedDotCount() == 1){
+                turn->setDotToKillSize(getNumberOfDotToKill(buttonAddedInGrille[position]));
+                turn->setButtonToKill(buttonAddedInGrille[position]);
+                removeOwnButtonFromGrille(buttonAddedInGrille[position]);
+            }else{
+                if(buttonAddedInGrille[position]->getOwnCustomButton()->getOwnCustomColor()->getHexa() ==
+                        turn->getOwnButtonToKill()->getOwnCustomButton()->getOwnCustomColor()->getHexa()){
+                    removeOwnButtonFromGrille(buttonAddedInGrille[position]);
+                }else{
+                    turn->setWin(false);
+                    newTurn();
+                }
+            }
+
+            if(getTouchedDotCount() == turn->getDotToKillSize()){
+                turn->setWin(true);
+                newTurn();
+            }
+        }else{
+            turn->setWin(false);
+            newTurn();
+        }
+        break;
+    default:
+        break;
     }
 }
 
@@ -239,18 +283,16 @@ void Game::touchDot()
     QTextStream out(stdout);
     QObject *senderObj = sender(); // This will give Sender object
     int position = senderObj->objectName().toInt();
-    int step = turn->getStep();
-    switch (step) {
-    case 1:
+    int currentTurn = turn->getCount();
+
+    if(currentTurn <= 3){
+        toWinStep1(position);
+    }else if(currentTurn > 3 && currentTurn <= 5){
+        toWinStep2(position);
+    }else{
         toWinStep3(position);
-        break;
-//    case 2:
-//        toWinStep2(position);
-//        break;
-    default:
-        toWinStep3(position);
-        break;
     }
+
 }
 
 void Game::touchedDotCountIncrement(){

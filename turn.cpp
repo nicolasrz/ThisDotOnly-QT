@@ -6,7 +6,6 @@
 Turn::Turn()
 {
     this->count = 0;
-    this->step = 0;
 }
 
 Turn::~Turn()
@@ -60,11 +59,6 @@ bool Turn::hasWin()
     return this->win;
 }
 
-void Turn::stepIncrement()
-{
-    ++this->step;
-}
-
 int Turn::getDotToKillSize()
 {
     return this->dotToKillSize;
@@ -101,8 +95,3 @@ void Turn::setColorAndOr(QString state)
     this->colorAndOr = state;
 }
 
-
-int Turn::getStep()
-{
-    return this->step;
-}

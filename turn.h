@@ -25,9 +25,6 @@ public:
     bool hasWin();
     void setWin(bool state);
 
-    int getStep();
-    void stepIncrement();
-
     int getDotToKillSize();
     void setDotToKillSize(int size);
 
@@ -51,7 +48,6 @@ private:
     QPointer<OwnButton> ownButtonToKill;
     QString timeLabel;
     bool win;
-    int step;
     int dotToKillSize;
     QVector<QPointer<OwnButton>> multiButtonToKill;
     QString colorAndOr;

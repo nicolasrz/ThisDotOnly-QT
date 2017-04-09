@@ -158,6 +158,9 @@ void Game::toWinStep1(int position)
             newTurn();
         }
     }else{
+        qTime = QTime::fromString("00:00:00");
+        labelTime->setText(qTime.toString(""));
+        timerCounting = false;
         turn->setWin(false);
         newTurn();
     }
@@ -210,13 +213,13 @@ int Game::getTouchedDotCount(){
 void Game::timerUpdate()
 {
     if(timerCounting){
-            qTime = qTime.addSecs(-1);
-            labelTime->setText(qTime.toString("ss"));
-            if(qTime.toString("ss").toInt() == 0){
-                turn->setWin(false);
-                timerCounting = false;
-            }
+        qTime = qTime.addSecs(-1);
+        labelTime->setText(qTime.toString("ss"));
+        if(qTime.toString("ss").toInt() == 0){
+            turn->setWin(false);
+            timerCounting = false;
         }
+    }
 }
 
 

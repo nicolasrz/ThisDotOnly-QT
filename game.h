@@ -12,6 +12,7 @@
 #include <QTime>
 #include "parameter.h"
 #include "turn.h"
+#include "killthis.h"
 class Game : public QWidget
 {
     Q_OBJECT
@@ -31,6 +32,7 @@ public:
     QPointer<QLabel> labelTurn;
     QPointer<QLabel> labelTurnCount;
 
+    void init();
     void touchedDotCountIncrement();
     int getTouchedDotCount();
 
@@ -38,7 +40,7 @@ private:
     QTime qTime;
     QPointer<QTimer> timer;
     bool timerCounting;
-    void init();
+
     void initGrille();
     int touchedDotCount;
     QPointer<OwnButton> getRandomOwnButtonShowed();

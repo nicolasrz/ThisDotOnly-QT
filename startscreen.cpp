@@ -35,6 +35,7 @@ StartScreen::~StartScreen()
 void StartScreen::startGame()
 {
     widget->stackedLayout->setCurrentIndex(1);
+    widget->game->init();
 }
 
 void StartScreen::showScore()

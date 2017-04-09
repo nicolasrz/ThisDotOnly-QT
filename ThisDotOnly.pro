@@ -31,7 +31,8 @@ SOURCES += main.cpp\
     ownbutton.cpp \
     turn.cpp \
     owncustombutton.cpp \
-    owncustomcolor.cpp
+    owncustomcolor.cpp \
+    killthis.cpp
 
 HEADERS  += widget.h \
     game.h \
@@ -40,7 +41,8 @@ HEADERS  += widget.h \
     ownbutton.h \
     turn.h \
     owncustombutton.h \
-    owncustomcolor.h
+    owncustomcolor.h \
+    killthis.h
 
 RESOURCES += \
     resources.qrc

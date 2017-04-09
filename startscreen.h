@@ -1,6 +1,6 @@
 #ifndef STARTSCREEN_H
 #define STARTSCREEN_H
-
+#include "killthis.h"
 #include <QWidget>
 #include <QPointer>
 #include <QHBoxLayout>

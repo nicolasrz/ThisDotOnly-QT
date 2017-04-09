@@ -9,15 +9,8 @@ Game::Game(QWidget *parent)
     : QWidget(parent)
 {
 
-    init();
-    //INIT TIME
-    timer = new QTimer(this);
-    connect(timer, &QTimer::timeout, this,&Game::timerUpdate);
-    timer->start(1000);
-    timerCounting = false;
-
-    //First Turn
-    newTurn();
+    qDebug() << this->x();
+    qDebug() << this->y();
 }
 
 Game::~Game()
@@ -52,6 +45,15 @@ void Game::init()
     vLayout->addLayout(hInfoGame);
 
     initGrille();
+
+    //INIT TIME
+    timer = new QTimer(this);
+    connect(timer, &QTimer::timeout, this,&Game::timerUpdate);
+    timer->start(1000);
+    timerCounting = false;
+
+    //First Turn
+    newTurn();
 
 }
 
@@ -137,6 +139,8 @@ void Game::step1(){
     turn->setButtonToKill(ownButtonToKill);
     turn->setDotToKillSize(getNumberOfDotToKill(turn->getOwnButtonToKill()));
     labelButtonToKill->setText(ownButtonToKill->getOwnCustomButton()->getOwnCustomColor()->getName());
+    QPointer<KillThis> killThis = new KillThis(this,ownButtonToKill->getOwnCustomButton()->getOwnCustomColor()
+                                               ,ownButtonToKill->getOwnCustomButton()->getShape(), "Click on the dot to KILL IT !");
 }
 
 void Game::toWinStep1(int position)

@@ -2,6 +2,10 @@ Widget
 {
     background-color:white;
 }
+KillThis
+{
+    background-color:white;
+}
 QPushButton
 {
     border-style: solid;

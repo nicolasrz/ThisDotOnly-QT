@@ -86,19 +86,12 @@ void Game::newTurn()
     turn->countIncrement();
     int currentTurn = turn->getCount();
     labelTurnCount->setText(QString::number(currentTurn));
-    switch (currentTurn) {
-    case 1:
+    if(currentTurn < 3){
         step1();
-        break;
-    case 2:
+    }else if(currentTurn > 3 && currentTurn <= 5){
         step2();
-        break;
-    case 3:
-        step2();
-        break;
-    default:
+    }else{
         step1();
-        break;
     }
 }
 
@@ -216,8 +209,11 @@ void Game::timerUpdate()
         qTime = qTime.addSecs(-1);
         labelTime->setText(qTime.toString("ss"));
         if(qTime.toString("ss").toInt() == 0){
-            turn->setWin(false);
+            qTime = QTime::fromString("00:00:00");
+            labelTime->setText(qTime.toString(""));
             timerCounting = false;
+            turn->setWin(false);
+            newTurn();
         }
     }
 }

@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QString>
 #include "ownbutton.h"
-
+#include <QTimer>
 class Turn : public QObject
 {
     Q_OBJECT
@@ -32,8 +32,9 @@ public:
 
     int getTouchedDot();
     void touchedDotIncrement();
-    void resetTouchedDot();
 
+    bool getTimerIsCounting();
+    void setTimerCounting(bool state);
 private:
     int count;
     int touchedDot;
@@ -42,6 +43,8 @@ private:
     bool win;
     int step;
     int dotToKillSize;
+
+
 };
 
 #endif // TURN_H

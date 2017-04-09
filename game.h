@@ -25,6 +25,7 @@ public:
     QPointer<Turn> turn;
     QVector<QPointer<OwnButton>> buttonAddedInGrille;
     QPointer<OwnButton> buttonToKill;
+    QPointer<QLabel> labelTime;
     QPointer<QLabel> labelKill;
     QPointer<QLabel> labelButtonToKill;
     QPointer<QLabel> labelTurn;
@@ -33,6 +34,9 @@ public:
     void touchedDotCountIncrement();
     int getTouchedDotCount();
 private:
+    QTime qTime;
+    QPointer<QTimer> timer;
+    bool timerCounting;
     void init();
     void initGrille();
     int touchedDotCount;
@@ -40,12 +44,17 @@ private:
     void changeButtonInGrille();
     void removeOwnButtonFromGrille(QPointer<OwnButton> ownButtonToRemove);
     int getNumberOfDotToKill(QPointer<OwnButton> ownButtonToKill);
+
     void newTurn();
     void step1();
     void toWinStep1(int position);
+
+    void step2();
+    void toWinStep2(int position);
 public slots:
     void touchDot();
-  //  void timerUpdate();
+    void timerUpdate();
+
 };
 
 #endif // GAME_H

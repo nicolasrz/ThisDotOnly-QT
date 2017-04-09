@@ -87,11 +87,11 @@ void Game::newTurn()
     int currentTurn = turn->getCount();
     labelTurnCount->setText(QString::number(currentTurn));
     if(currentTurn < 3){
-        step1();
+        step3();
     }else if(currentTurn > 3 && currentTurn <= 5){
-        step2();
+        step3();
     }else{
-        step1();
+        step3();
     }
 }
 
@@ -165,8 +165,8 @@ void Game::step2()
     qDebug() << "Step 2";
     QPointer<OwnButton> ownButtonToKill = getRandomOwnButtonShowed();
     turn->setButtonToKill(ownButtonToKill);
-
     turn->setDotToKillSize(getNumberOfDotToKill(turn->getOwnButtonToKill()));
+
     labelButtonToKill->setText(ownButtonToKill->getOwnCustomButton()->getOwnCustomColor()->getName());
     qTime = QTime::fromString("00:00:10");
     labelTime->setText(qTime.toString("ss"));
@@ -177,6 +177,63 @@ void Game::toWinStep2(int position){
     toWinStep1(position);
 }
 
+void Game::step3()
+{
+    qDebug() << "Step3";
+    turn->clearMultiButtonToKill();
+    QPointer<OwnButton> firstButtonToKill =  getRandomOwnButtonShowed();
+    QPointer<OwnButton> secondButtonToKill =  getRandomOwnButtonShowed();
+    while(firstButtonToKill->getOwnCustomButton()->getOwnCustomColor()->getHexa() ==
+          secondButtonToKill->getOwnCustomButton()->getOwnCustomColor()->getHexa()){
+            secondButtonToKill =  getRandomOwnButtonShowed();
+    }
+    turn->addInMultiButtonToKill(firstButtonToKill);
+    turn->addInMultiButtonToKill(secondButtonToKill);
+
+    //int andOr = parameter->getRandomNumber(0, 1);
+    int andOr = 1;
+    if(andOr == 0){
+        turn->setColorAndOr("or");
+        labelButtonToKill->setText(firstButtonToKill->getOwnCustomButton()->getOwnCustomColor()->getName() +" OR " +
+                                   secondButtonToKill->getOwnCustomButton()->getOwnCustomColor()->getName());
+    }else{
+        turn->setColorAndOr("and");
+        labelButtonToKill->setText(firstButtonToKill->getOwnCustomButton()->getOwnCustomColor()->getName() +" AND " +
+                                   secondButtonToKill->getOwnCustomButton()->getOwnCustomColor()->getName());
+
+        turn->setDotToKillSize(getNumberOfDotToKill(firstButtonToKill) +
+                               getNumberOfDotToKill(secondButtonToKill));
+    }
+
+    timerCounting = false;
+
+}
+
+void Game::toWinStep3(int position)
+{
+    if("and" == "and"){
+    //if(turn->getColorAndOr() == "and"){
+        touchedDotCountIncrement();
+
+        if(buttonAddedInGrille[position]->getOwnCustomButton()->getOwnCustomColor()->getHexa() ==
+                turn->getMultiButtonToKill()[0]->getOwnCustomButton()->getOwnCustomColor()->getHexa()
+                ||
+                buttonAddedInGrille[position]->getOwnCustomButton()->getOwnCustomColor()->getHexa() ==
+                turn->getMultiButtonToKill()[1]->getOwnCustomButton()->getOwnCustomColor()->getHexa()
+                ){
+            removeOwnButtonFromGrille(buttonAddedInGrille[position]);
+            if(turn->getDotToKillSize() == getTouchedDotCount()){
+                turn->setWin(true);
+                newTurn();
+            }
+
+        }else{
+            turn->setWin(false);
+            newTurn();
+        }
+    }
+}
+
 void Game::touchDot()
 {
     QTextStream out(stdout);
@@ -185,13 +242,13 @@ void Game::touchDot()
     int step = turn->getStep();
     switch (step) {
     case 1:
-        toWinStep1(position);
+        toWinStep3(position);
         break;
-    case 2:
-        toWinStep2(position);
-        break;
+//    case 2:
+//        toWinStep2(position);
+//        break;
     default:
-        toWinStep1(position);
+        toWinStep3(position);
         break;
     }
 }

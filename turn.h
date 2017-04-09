@@ -5,6 +5,7 @@
 #include <QString>
 #include "ownbutton.h"
 #include <QTimer>
+#include <QVector>
 class Turn : public QObject
 {
     Q_OBJECT
@@ -35,6 +36,15 @@ public:
 
     bool getTimerIsCounting();
     void setTimerCounting(bool state);
+
+    QVector<QPointer<OwnButton>> getMultiButtonToKill();
+    void addInMultiButtonToKill(QPointer<OwnButton> ownButtonToKill);
+    void clearMultiButtonToKill();
+    QString getColorAndOr();
+    void setColorAndOr(QString state);
+
+
+
 private:
     int count;
     int touchedDot;
@@ -43,6 +53,8 @@ private:
     bool win;
     int step;
     int dotToKillSize;
+    QVector<QPointer<OwnButton>> multiButtonToKill;
+    QString colorAndOr;
 
 
 };

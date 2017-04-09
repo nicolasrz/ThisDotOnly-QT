@@ -33,6 +33,7 @@ public:
 
     void touchedDotCountIncrement();
     int getTouchedDotCount();
+
 private:
     QTime qTime;
     QPointer<QTimer> timer;
@@ -51,6 +52,9 @@ private:
 
     void step2();
     void toWinStep2(int position);
+
+    void step3();
+    void toWinStep3(int position);
 public slots:
     void touchDot();
     void timerUpdate();

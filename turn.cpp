@@ -75,6 +75,32 @@ void Turn::setDotToKillSize(int size)
     this->dotToKillSize = size;
 }
 
+QVector<QPointer<OwnButton> > Turn::getMultiButtonToKill()
+{
+    return this->multiButtonToKill;
+}
+
+void Turn::addInMultiButtonToKill(QPointer<OwnButton> ownButtonToKill)
+{
+    this->multiButtonToKill.append(ownButtonToKill);
+}
+
+void Turn::clearMultiButtonToKill()
+{
+    this->multiButtonToKill.clear();
+}
+
+
+QString Turn::getColorAndOr()
+{
+    return this->colorAndOr;
+}
+
+void Turn::setColorAndOr(QString state)
+{
+    this->colorAndOr = state;
+}
+
 
 int Turn::getStep()
 {

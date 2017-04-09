@@ -63,6 +63,10 @@ void Game::initGrille()
 
 void Game::newTurn()
 {
+    if(turn->hasWin() == false){
+        delete turn;
+        turn = new Turn();
+    }
     changeButtonInGrille();
     turn->stepIncrement();
     turn->countIncrement();
@@ -126,9 +130,11 @@ void Game::toWinStep1(int position)
         removeOwnButtonFromGrille(buttonAddedInGrille[position]);
         if(turn->getDotToKillSize() == turn->getTouchedDot() ){
             qDebug() << "win";
+            newTurn();
         }
     }else{
         turn->setWin(false);
+        newTurn();
     }
 
 }

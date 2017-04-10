@@ -30,6 +30,7 @@ public:
     QPointer<QLabel> labelTime;
     QPointer<QLabel> labelKill;
     QPointer<QPushButton> labelButtonToKill;
+    QPointer<QPushButton> labelSecondButtonToKill;
     QPointer<QLabel> labelTurn;
     QPointer<QLabel> labelTurnCount;
     QPointer<QLabel> labelAndOr;

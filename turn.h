@@ -46,6 +46,7 @@ private:
     int count;
     int touchedDot;
     QPointer<OwnButton> ownButtonToKill;
+    QPointer<OwnButton> secondOwnButtonToKill;
     QString timeLabel;
     bool win;
     int dotToKillSize;

@@ -33,6 +33,7 @@ void Turn::setButtonToKill(QPointer<OwnButton> ownButtonToKill)
     this->ownButtonToKill = ownButtonToKill;
 }
 
+
 QString Turn::getTimeLabel()
 {
     return this->timeLabel;

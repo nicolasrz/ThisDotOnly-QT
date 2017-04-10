@@ -34,6 +34,7 @@ void Game::init()
 
     labelKill = new QLabel("Kill : ");
     labelButtonToKill = new QPushButton();
+    labelSecondButtonToKill = new QPushButton();
     labelTurn = new QLabel("Turn : ");
     labelTurnCount = new QLabel();
     labelTime = new QLabel();
@@ -86,6 +87,15 @@ void Game::initGrille()
 void Game::newTurn()
 {
     if(turn->hasWin() == false){
+        labelAndOr->setText("");
+        labelSecondButtonToKill->setStyleSheet("QPushButton{"
+                                             "background-color : white;"
+                                             "border-radius:15px;"
+                                             "max-width:30px;"
+                                             "max-height:30px;"
+                                             "min-width:30px;"
+                                             "min-height:30px;}");
+
         delete turn;
         turn = new Turn();
     }
@@ -210,21 +220,15 @@ void Game::step3()
     if(andOr == 0){
         turn->setColorAndOr("or");
         labelButtonToKill->setStyleSheet("QPushButton{ background-color : "+firstButtonToKill->getOwnCustomButton()->getOwnCustomColor()->getHexa()+";max-width:30px;max-height:30px;min-width:30px;min-height:30px;border-radius:15px}");
-//        labelButtonToKill->setText(firstButtonToKill->getOwnCustomButton()->getOwnCustomColor()->getName() +" OR " +
-//                                   secondButtonToKill->getOwnCustomButton()->getOwnCustomColor()->getName());
         labelAndOr->setText(turn->getColorAndOr());
-        QPointer<QPushButton> sButtonToKill = new QPushButton();
-        sButtonToKill->setStyleSheet("QPushButton{ background-color : "+secondButtonToKill->getOwnCustomButton()->getOwnCustomColor()->getHexa()+";max-width:30px;max-height:30px;min-width:30px;min-height:30px;border-radius:15px}");
-        gridLayoutInfoGame->addWidget(sButtonToKill,0 ,5);
+        labelSecondButtonToKill->setStyleSheet("QPushButton{ background-color : "+secondButtonToKill->getOwnCustomButton()->getOwnCustomColor()->getHexa()+";max-width:30px;max-height:30px;min-width:30px;min-height:30px;border-radius:15px}");
+        gridLayoutInfoGame->addWidget(labelSecondButtonToKill,0 ,5);
     }else{
         turn->setColorAndOr("and");
-//        labelButtonToKill->setText(firstButtonToKill->getOwnCustomButton()->getOwnCustomColor()->getName() +" AND " +
-//                                   secondButtonToKill->getOwnCustomButton()->getOwnCustomColor()->getName());
         labelButtonToKill->setStyleSheet("QPushButton{ background-color : "+firstButtonToKill->getOwnCustomButton()->getOwnCustomColor()->getHexa()+";max-width:30px;max-height:30px;min-width:30px;min-height:30px;border-radius:15px}");
         labelAndOr->setText(turn->getColorAndOr());
-        QPointer<QPushButton> sButtonToKill = new QPushButton();
-        sButtonToKill->setStyleSheet("QPushButton{ background-color : "+secondButtonToKill->getOwnCustomButton()->getOwnCustomColor()->getHexa()+";max-width:30px;max-height:30px;min-width:30px;min-height:30px;border-radius:15px}");
-        gridLayoutInfoGame->addWidget(sButtonToKill,0 ,5);
+        labelSecondButtonToKill->setStyleSheet("QPushButton{ background-color : "+secondButtonToKill->getOwnCustomButton()->getOwnCustomColor()->getHexa()+";max-width:30px;max-height:30px;min-width:30px;min-height:30px;border-radius:15px}");
+        gridLayoutInfoGame->addWidget(labelSecondButtonToKill,0 ,5);
         turn->setDotToKillSize(getNumberOfDotToKill(firstButtonToKill) +
                                getNumberOfDotToKill(secondButtonToKill));
     }

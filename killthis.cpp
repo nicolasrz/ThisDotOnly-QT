@@ -1,26 +1,42 @@
 #include "killthis.h"
 #include <QDebug>
-#include <QGuiApplication>
+#include <QStyle>
+#include <QDesktopWidget>
+#include <QApplication>
 KillThis::KillThis(QWidget *parent, QPointer<OwnCustomColor> color, QString shape, QString message)
 {
-    hLayout = new QHBoxLayout(this);
+
+    vLayout = new QVBoxLayout(this);
     this->setStyleSheet("KillThis{background-color:white;}");
-
+    labelKill = new QLabel(message);
     QPointer<QPushButton> button = new QPushButton();
-    button->setStyleSheet("QPushButton{background-color : " + color->getHexa()+";}");
-    qDebug() <<  parent->x();
-    qDebug() <<  parent->y();
-    qDebug() <<  parent->width();
-    qDebug() <<  parent->height();
-    hLayout->addWidget(button);
+    button->setStyleSheet("QPushButton{"
+                          "background-color : " + color->getHexa()+";"
+                          "border-style: solid;"
+                          "border-width:1px;"
+                          "border-radius:25px;"
+                          "max-width:50px;"
+                          "max-height:50px;"
+                          "min-width:50px;"
+                          "min-height:50px;}");
+    gridLayout = new QGridLayout();
+    gridLayout->addWidget(button,0,1);
 
-
-    move( 0,0 );
-
+    vLayout->addWidget(labelKill);
+    vLayout->addLayout(gridLayout);
+    connect(button, &QPushButton::clicked, this, &KillThis::iUnderstand) ;
+    setWindowFlags( Qt::CustomizeWindowHint );
+    this->adjustSize();
+    this->move(QApplication::desktop()->screen()->rect().center() - this->rect().center());
     this->show();
 }
 
 KillThis::~KillThis()
 {
 
+}
+
+void KillThis::iUnderstand()
+{
+    this->close();
 }

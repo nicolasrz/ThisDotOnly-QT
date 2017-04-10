@@ -5,7 +5,8 @@
 #include <QPointer>
 #include <QLabel>
 #include <QString>
-#include <QHBoxLayout>
+#include <QGridLayout>
+#include <QVBoxLayout>
 class KillThis : public QWidget
 {
     Q_OBJECT
@@ -15,10 +16,13 @@ public:
 
 private:
     QPointer<QLabel> labelKill;
-    QPointer<QHBoxLayout> hLayout;
+    QPointer<QGridLayout> gridLayout;
+    QPointer<QVBoxLayout> vLayout;
     QString message;
     QPointer<OwnCustomColor> color;
     QString shape;
+public slots:
+    void iUnderstand();
 
 };
 

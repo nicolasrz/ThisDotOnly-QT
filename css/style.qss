@@ -8,8 +8,7 @@ KillThis
 }
 QPushButton
 {
-    border-style: solid;
-    border-width:1px;
+
     border-radius:25px;
     max-width:50px;
     max-height:50px;

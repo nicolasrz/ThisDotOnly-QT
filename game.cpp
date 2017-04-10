@@ -30,19 +30,26 @@ void Game::init()
     // INIT LAYOUT
     vLayout = new QVBoxLayout(this);
     hInfoGame = new QHBoxLayout();
+    vLayout->addLayout(hInfoGame);
+
     labelKill = new QLabel("Kill : ");
-    labelButtonToKill = new QLabel();
+    labelButtonToKill = new QPushButton();
     labelTurn = new QLabel("Turn : ");
     labelTurnCount = new QLabel();
     labelTime = new QLabel();
+    labelAndOr = new QLabel();
 
-    hInfoGame->addWidget(labelKill);
-    hInfoGame->addWidget(labelButtonToKill);
-    hInfoGame->addWidget(labelTurn);
-    hInfoGame->addWidget(labelTurnCount);
-    hInfoGame->addWidget(labelTime);
+    gridLayoutInfoGame = new QGridLayout();
+    hInfoGame->addLayout(gridLayoutInfoGame);
 
-    vLayout->addLayout(hInfoGame);
+    gridLayoutInfoGame->addWidget(labelKill,0 ,0);
+    gridLayoutInfoGame->addWidget(labelButtonToKill, 0, 1);
+    gridLayoutInfoGame->addWidget(labelAndOr, 0, 3);
+    gridLayoutInfoGame->addWidget(labelTurn, 0, 6);
+    gridLayoutInfoGame->addWidget(labelTurnCount, 0, 7);
+    gridLayoutInfoGame->addWidget(labelTime, 0, 8);
+
+
 
     initGrille();
 
@@ -133,20 +140,22 @@ int Game::getNumberOfDotToKill(QPointer<OwnButton> ownButtonToKill)
     return count;
 }
 
+
 void Game::step1(){
     qDebug() << "Step 1";
+    turn->clearMultiButtonToKill();
     QPointer<OwnButton> ownButtonToKill = getRandomOwnButtonShowed();
-    turn->setButtonToKill(ownButtonToKill);
-    turn->setDotToKillSize(getNumberOfDotToKill(turn->getOwnButtonToKill()));
-    labelButtonToKill->setText(ownButtonToKill->getOwnCustomButton()->getOwnCustomColor()->getName());
-    QPointer<KillThis> killThis = new KillThis(this,ownButtonToKill->getOwnCustomButton()->getOwnCustomColor()
-                                               ,ownButtonToKill->getOwnCustomButton()->getShape(), "Click on the dot to KILL IT !");
+    turn->addInMultiButtonToKill(ownButtonToKill);
+    turn->setDotToKillSize(getNumberOfDotToKill(turn->getMultiButtonToKill()[0]));
+    labelButtonToKill->setStyleSheet("QPushButton{ background-color : "+ownButtonToKill->getOwnCustomButton()->getOwnCustomColor()->getHexa()+";max-width:30px;max-height:30px;min-width:30px;min-height:30px;border-radius:15px}");
+
 }
+
 
 void Game::toWinStep1(int position)
 {
     if(buttonAddedInGrille[position]->getOwnCustomButton()->getOwnCustomColor()->getHexa() ==
-            turn->getOwnButtonToKill()->getOwnCustomButton()->getOwnCustomColor()->getHexa()){
+            turn->getMultiButtonToKill()[0]->getOwnCustomButton()->getOwnCustomColor()->getHexa()){
         buttonAddedInGrille[position]->getButton()->setDisabled(true);
         removeOwnButtonFromGrille(buttonAddedInGrille[position]);
         touchedDotCountIncrement();
@@ -167,11 +176,12 @@ void Game::toWinStep1(int position)
 void Game::step2()
 {
     qDebug() << "Step 2";
+    turn->clearMultiButtonToKill();
     QPointer<OwnButton> ownButtonToKill = getRandomOwnButtonShowed();
-    turn->setButtonToKill(ownButtonToKill);
-    turn->setDotToKillSize(getNumberOfDotToKill(turn->getOwnButtonToKill()));
+    turn->addInMultiButtonToKill(ownButtonToKill);
+    turn->setDotToKillSize(getNumberOfDotToKill(turn->getMultiButtonToKill()[0]));
 
-    labelButtonToKill->setText(ownButtonToKill->getOwnCustomButton()->getOwnCustomColor()->getName());
+    labelButtonToKill->setStyleSheet("QPushButton{ background-color : "+ownButtonToKill->getOwnCustomButton()->getOwnCustomColor()->getHexa()+";max-width:30px;max-height:30px;min-width:30px;min-height:30px;border-radius:15px}");
     qTime = QTime::fromString("00:00:10");
     labelTime->setText(qTime.toString("ss"));
     timerCounting = true;
@@ -199,13 +209,22 @@ void Game::step3()
 
     if(andOr == 0){
         turn->setColorAndOr("or");
-        labelButtonToKill->setText(firstButtonToKill->getOwnCustomButton()->getOwnCustomColor()->getName() +" OR " +
-                                   secondButtonToKill->getOwnCustomButton()->getOwnCustomColor()->getName());
+        labelButtonToKill->setStyleSheet("QPushButton{ background-color : "+firstButtonToKill->getOwnCustomButton()->getOwnCustomColor()->getHexa()+";max-width:30px;max-height:30px;min-width:30px;min-height:30px;border-radius:15px}");
+//        labelButtonToKill->setText(firstButtonToKill->getOwnCustomButton()->getOwnCustomColor()->getName() +" OR " +
+//                                   secondButtonToKill->getOwnCustomButton()->getOwnCustomColor()->getName());
+        labelAndOr->setText(turn->getColorAndOr());
+        QPointer<QPushButton> sButtonToKill = new QPushButton();
+        sButtonToKill->setStyleSheet("QPushButton{ background-color : "+secondButtonToKill->getOwnCustomButton()->getOwnCustomColor()->getHexa()+";max-width:30px;max-height:30px;min-width:30px;min-height:30px;border-radius:15px}");
+        gridLayoutInfoGame->addWidget(sButtonToKill,0 ,5);
     }else{
         turn->setColorAndOr("and");
-        labelButtonToKill->setText(firstButtonToKill->getOwnCustomButton()->getOwnCustomColor()->getName() +" AND " +
-                                   secondButtonToKill->getOwnCustomButton()->getOwnCustomColor()->getName());
-
+//        labelButtonToKill->setText(firstButtonToKill->getOwnCustomButton()->getOwnCustomColor()->getName() +" AND " +
+//                                   secondButtonToKill->getOwnCustomButton()->getOwnCustomColor()->getName());
+        labelButtonToKill->setStyleSheet("QPushButton{ background-color : "+firstButtonToKill->getOwnCustomButton()->getOwnCustomColor()->getHexa()+";max-width:30px;max-height:30px;min-width:30px;min-height:30px;border-radius:15px}");
+        labelAndOr->setText(turn->getColorAndOr());
+        QPointer<QPushButton> sButtonToKill = new QPushButton();
+        sButtonToKill->setStyleSheet("QPushButton{ background-color : "+secondButtonToKill->getOwnCustomButton()->getOwnCustomColor()->getHexa()+";max-width:30px;max-height:30px;min-width:30px;min-height:30px;border-radius:15px}");
+        gridLayoutInfoGame->addWidget(sButtonToKill,0 ,5);
         turn->setDotToKillSize(getNumberOfDotToKill(firstButtonToKill) +
                                getNumberOfDotToKill(secondButtonToKill));
     }

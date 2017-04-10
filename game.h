@@ -22,16 +22,17 @@ public:
     QPointer<QVBoxLayout> vLayout;
     QPointer<QHBoxLayout> hLayout;
     QPointer<QHBoxLayout> hInfoGame;
+    QPointer<QGridLayout> gridLayoutInfoGame;
     QPointer<Parameter> parameter;
     QPointer<Turn> turn;
     QVector<QPointer<OwnButton>> buttonAddedInGrille;
     QPointer<OwnButton> buttonToKill;
     QPointer<QLabel> labelTime;
     QPointer<QLabel> labelKill;
-    QPointer<QLabel> labelButtonToKill;
+    QPointer<QPushButton> labelButtonToKill;
     QPointer<QLabel> labelTurn;
     QPointer<QLabel> labelTurnCount;
-
+    QPointer<QLabel> labelAndOr;
     void init();
     void touchedDotCountIncrement();
     int getTouchedDotCount();

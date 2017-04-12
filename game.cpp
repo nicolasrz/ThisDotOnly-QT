@@ -9,8 +9,10 @@ Game::Game(QWidget *parent)
     : QWidget(parent)
 {
 
-    qDebug() << this->x();
-    qDebug() << this->y();
+}
+Game::Game(int dpiX, int dpiY)
+{
+
 }
 
 Game::~Game()

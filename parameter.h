@@ -5,6 +5,9 @@
 #include <QVector>
 #include <QPointer>
 #include "owncustomcolor.h"
+#include <QDesktopWidget>
+
+
 class Parameter : public QObject
 {
     Q_OBJECT
@@ -16,9 +19,15 @@ public:
     QStringList getListShape();
     QPointer<OwnCustomColor> getRandomOwnCustomColor();
     int getRandomNumber(int min, int max);
+    int getDpiX();
+    int getDpiY();
+
 private:
     QStringList listShape;
     QVector<QPointer<OwnCustomColor>> listOwnColor;
+    int dpiX;
+    int dpiY;
+
 
 
 

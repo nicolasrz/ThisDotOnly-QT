@@ -8,17 +8,13 @@
 
 Widget::Widget(QWidget *parent)
 {
-//    QScreen *screen = QGuiApplication::primaryScreen();
-//    QRect  screenGeometry = screen->geometry();
-//    this->heightScreen = screenGeometry.height();
-//    this->widthScreen = screenGeometry.width();
-//    this->setMinimumHeight(this->heightScreen);
-//    this->setMinimumWidth(this->widthScreen);
+}
+Widget::Widget(int dpiX, int dpiY){
 
     mainLayout = new QHBoxLayout(this);
 
     startScreen = new StartScreen();
-    game = new Game();
+    game = new Game(dpiX, dpiY);
 
     stackedLayout = new QStackedLayout();
     stackedLayout->addWidget(startScreen);

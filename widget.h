@@ -12,6 +12,7 @@ class Widget : public QWidget
 
 public:
     Widget(QWidget *parent = 0);
+    Widget(int dpiX, int dpiY);
     ~Widget();
     int heightScreen;
     int widthScreen;

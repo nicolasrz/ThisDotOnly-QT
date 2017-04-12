@@ -5,7 +5,10 @@ Widget * widget;
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    widget = new Widget();
+    int dpiX = a.desktop()->logicalDpiX();
+    int dpiY = a.desktop()->logicalDpiY();
+
+    widget = new Widget(dpiX, dpiY);
 
     widget->show();
 

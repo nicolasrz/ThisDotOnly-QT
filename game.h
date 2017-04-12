@@ -18,6 +18,7 @@ class Game : public QWidget
     Q_OBJECT
 public:
     Game(QWidget *parent = 0);
+    Game(int dpiX, int dpiY);
     ~Game();
     QPointer<QVBoxLayout> vLayout;
     QPointer<QHBoxLayout> hLayout;

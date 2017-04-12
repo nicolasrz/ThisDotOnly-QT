@@ -25,6 +25,8 @@ Parameter::Parameter()
 
     this->listShape << "circle" << "square";
 
+
+
 }
 
 Parameter::~Parameter()
@@ -50,4 +52,14 @@ QPointer<OwnCustomColor> Parameter::getRandomOwnCustomColor(){
 
 int Parameter::getRandomNumber(int min, int max){
     return qrand() % ((max + 1) - min) + min;
+}
+
+int Parameter::getDpiX()
+{
+ return  1;
+}
+
+int Parameter::getDpiY()
+{
+    return  1;
 }
